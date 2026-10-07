@@ -1,6 +1,11 @@
-import tkinter as tk
+import customtkinter as ctk
 
-window = tk.Tk()
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("blue")
+
+
+window = ctk.CTk()
+
 window.title("Smart Aquarium Assistant")
 window.geometry("320x650")
 window.resizable(False, False)
@@ -11,35 +16,34 @@ cyan_color = "#00F8FB"
 green_color = "#60D48C"
 white_color = "#FFFFFF"
 gray_color = "#A8B8C0"
+error_color = "#FF7070"
 
-window.configure(bg=background_color)
+window.configure(
+    fg_color=background_color
+)
 
-back_button = tk.Button(
+back_button = ctk.CTkButton(
     window,
     text="←",
-    font=("Arial", 18),
-    bg=background_color,
-    fg=cyan_color,
-    activebackground=background_color,
-    activeforeground=white_color,
-    relief="flat",
-    bd=0,
-    cursor="hand2"
+    width=35,
+    height=35,
+    font=("Arial", 22),
+    fg_color="transparent",
+    hover_color="#003047",
+    text_color=cyan_color,
+    corner_radius=10
 )
 
 back_button.place(
-    x=18,
-    y=18,
-    width=35,
-    height=35
+    x=15,
+    y=15
 )
 
-title = tk.Label(
+title = ctk.CTkLabel(
     window,
     text="Реєстрація",
-    font=("Arial", 20, "bold"),
-    bg=background_color,
-    fg=white_color
+    font=("Arial", 22, "bold"),
+    text_color=white_color
 )
 
 title.place(
@@ -47,14 +51,25 @@ title.place(
     y=70
 )
 
-def create_field(y, text, show=""):
+subtitle = ctk.CTkLabel(
+    window,
+    text="Створіть акаунт для керування акваріумом",
+    font=("Arial", 9),
+    text_color=gray_color
+)
 
-    label = tk.Label(
+subtitle.place(
+    x=35,
+    y=105
+)
+
+def create_field(y, text, placeholder, show=None):
+
+    label = ctk.CTkLabel(
         window,
         text=text,
         font=("Arial", 9),
-        bg=background_color,
-        fg=white_color
+        text_color=white_color
     )
 
     label.place(
@@ -62,54 +77,63 @@ def create_field(y, text, show=""):
         y=y
     )
 
-    entry = tk.Entry(
+    entry = ctk.CTkEntry(
         window,
+        width=250,
+        height=40,
+        corner_radius=10,
+        border_width=1,
+        border_color="#00516D",
+        fg_color=field_color,
+        text_color=white_color,
+        placeholder_text=placeholder,
+        placeholder_text_color="#76939F",
         font=("Arial", 10),
-        bg=field_color,
-        fg=white_color,
-        insertbackground=white_color,
-        relief="flat",
-        bd=0,
         show=show
     )
 
     entry.place(
         x=35,
-        y=y + 20,
-        width=250,
-        height=36
+        y=y + 20
     )
 
     return entry
 
 name_entry = create_field(
-    125,
-    "Ім'я"
+    130,
+    "Ім'я",
+    "Введіть ваше ім'я"
 )
+
 
 email_entry = create_field(
-    200,
-    "Email"
+    205,
+    "Email",
+    "Введіть Email"
 )
+
 
 password_entry = create_field(
-    275,
+    280,
     "Пароль",
+    "Введіть пароль",
     "*"
 )
+
 
 confirm_password_entry = create_field(
-    350,
+    355,
     "Підтвердіть пароль",
+    "Повторіть пароль",
     "*"
 )
 
-message = tk.Label(
+message = ctk.CTkLabel(
     window,
     text="",
     font=("Arial", 8),
-    bg=background_color,
-    fg=cyan_color
+    text_color=cyan_color,
+    anchor="w"
 )
 
 message.place(
@@ -125,65 +149,111 @@ def register():
     confirm_password = confirm_password_entry.get()
 
     if name == "":
-        message.config(
+        message.configure(
             text="Введіть ім'я",
-            fg="#FF7070"
+            text_color=error_color
         )
         return
 
     if email == "":
-        message.config(
+        message.configure(
             text="Введіть Email",
-            fg="#FF7070"
+            text_color=error_color
         )
         return
 
     if password == "":
-        message.config(
+        message.configure(
             text="Введіть пароль",
-            fg="#FF7070"
+            text_color=error_color
         )
         return
 
     if confirm_password == "":
-        message.config(
+        message.configure(
             text="Підтвердіть пароль",
-            fg="#FF7070"
+            text_color=error_color
         )
         return
 
     if password != confirm_password:
-        message.config(
+        message.configure(
             text="Паролі не співпадають",
-            fg="#FF7070"
+            text_color=error_color
         )
         return
 
-    message.config(
+    message.configure(
         text="Реєстрація успішна!",
-        fg=green_color
+        text_color=green_color
     )
 
-register_button = tk.Button(
+register_button = ctk.CTkButton(
     window,
     text="Зареєструватися",
+    width=250,
+    height=45,
+    corner_radius=12,
+    fg_color=cyan_color,
+    hover_color="#4FFFFF",
+    text_color=background_color,
     font=("Arial", 10, "bold"),
-    bg=cyan_color,
-    fg=background_color,
-    activebackground=green_color,
-    activeforeground=background_color,
-    relief="flat",
-    bd=0,
-    cursor="hand2",
     command=register
 )
 
 register_button.place(
     x=35,
-    y=440,
-    width=250,
-    height=42
+    y=440
 )
 
+account_frame = ctk.CTkFrame(
+    window,
+    width=250,
+    height=30,
+    fg_color="transparent"
+)
+
+account_frame.place(
+    x=35,
+    y=505
+)
+
+
+question = ctk.CTkLabel(
+    account_frame,
+    text="Вже маєте акаунт?",
+    font=("Arial", 9),
+    text_color=gray_color
+)
+
+question.pack(
+    side="left"
+)
+
+def open_login():
+
+    message.configure(
+        text="Відкриття сторінки входу...",
+        text_color=cyan_color
+    )
+
+
+login_button = ctk.CTkButton(
+    account_frame,
+    text="Увійти",
+    width=45,
+    height=25,
+    fg_color="transparent",
+    hover_color="#003047",
+    text_color=cyan_color,
+    font=("Arial", 9, "bold"),
+    corner_radius=6,
+    command=open_login
+)
+
+login_button.pack(
+    side="left",
+    padx=(5, 0)
+)
 
 window.mainloop()
