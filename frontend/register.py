@@ -104,5 +104,86 @@ confirm_password_entry = create_field(
     "*"
 )
 
+message = tk.Label(
+    window,
+    text="",
+    font=("Arial", 8),
+    bg=background_color,
+    fg=cyan_color
+)
+
+message.place(
+    x=35,
+    y=405
+)
+
+def register():
+
+    name = name_entry.get()
+    email = email_entry.get()
+    password = password_entry.get()
+    confirm_password = confirm_password_entry.get()
+
+    if name == "":
+        message.config(
+            text="Введіть ім'я",
+            fg="#FF7070"
+        )
+        return
+
+    if email == "":
+        message.config(
+            text="Введіть Email",
+            fg="#FF7070"
+        )
+        return
+
+    if password == "":
+        message.config(
+            text="Введіть пароль",
+            fg="#FF7070"
+        )
+        return
+
+    if confirm_password == "":
+        message.config(
+            text="Підтвердіть пароль",
+            fg="#FF7070"
+        )
+        return
+
+    if password != confirm_password:
+        message.config(
+            text="Паролі не співпадають",
+            fg="#FF7070"
+        )
+        return
+
+    message.config(
+        text="Реєстрація успішна!",
+        fg=green_color
+    )
+
+register_button = tk.Button(
+    window,
+    text="Зареєструватися",
+    font=("Arial", 10, "bold"),
+    bg=cyan_color,
+    fg=background_color,
+    activebackground=green_color,
+    activeforeground=background_color,
+    relief="flat",
+    bd=0,
+    cursor="hand2",
+    command=register
+)
+
+register_button.place(
+    x=35,
+    y=440,
+    width=250,
+    height=42
+)
+
 
 window.mainloop()
