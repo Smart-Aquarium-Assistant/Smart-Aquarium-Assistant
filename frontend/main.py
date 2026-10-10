@@ -1,6 +1,5 @@
 import customtkinter as ctk
-from register import register_page
-
+from welcome import welcome_page
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -11,6 +10,6 @@ window.geometry("320x650")
 window.resizable(False, False)
 window.configure(fg_color="#001B2E")
 
-register_page(window)
+welcome_page(window)
 
 window.mainloop()

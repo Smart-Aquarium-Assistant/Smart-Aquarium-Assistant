@@ -67,6 +67,30 @@ def login_page(window):
     )
     message.place(x=35, y=300)
 
+
+    def back_to_welcome():
+        from welcome import welcome_page
+
+        for widget in window.winfo_children():
+            widget.destroy()
+
+        welcome_page(window)
+
+    back_button = ctk.CTkButton(
+        window,
+        text="←",
+        width=35,
+        height=35,
+        corner_radius=10,
+        fg_color="transparent",
+        hover_color="#003047",
+        text_color="#FFFFFF",
+        font=("Arial", 24, "bold"),
+        command=back_to_welcome
+    )
+    back_button.place(x=15, y=15)
+
+
     def login():
         email = email_entry.get()
         password = password_entry.get()
