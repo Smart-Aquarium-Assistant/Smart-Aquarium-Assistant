@@ -40,8 +40,6 @@ def welcome_page(window):
                 text,
                 font=font,
                 fill=color,
-                stroke_width=1,
-                stroke_fill="black",
                 spacing=2
             )
 
@@ -83,6 +81,7 @@ def welcome_page(window):
     else:
         window.configure(fg_color="#001B2E")
 
+    # Регистрация
     def open_register():
         from register import register_page
 
@@ -96,15 +95,16 @@ def welcome_page(window):
         text="Зареєструватися",
         width=270,
         height=45,
-        corner_radius=20,
+        corner_radius=15,
         fg_color="#00F8FB",
         hover_color="#00D5D8",
         text_color="#001B2E",
-        font=("Arial", 16, "bold"),
+        font=("Arial", 15, "bold"),
         command=open_register
     )
-    register_button.place(x=25, y=490)
+    register_button.place(x=25, y=455)
 
+    # Вход
     def open_login():
         from login import login_page
 
@@ -118,73 +118,37 @@ def welcome_page(window):
         text="Увійти",
         width=270,
         height=45,
-        corner_radius=20,
+        corner_radius=15,
         fg_color="#003047",
-        hover_color="#00415B",
+        hover_color="#004B65",
         border_width=1,
-        border_color="#FFFFFF",
+        border_color="#00F8FB",
         text_color="#FFFFFF",
-        font=("Arial", 16, "bold"),
+        font=("Arial", 15, "bold"),
         command=open_login
     )
-    login_button.place(x=25, y=545)
+    login_button.place(x=25, y=510)
 
-    guest_label = ctk.CTkLabel(
+    # Вход администратора
+    def open_admin():
+        from home import home_page
+
+        home_page(window)
+
+    admin_button = ctk.CTkButton(
         window,
-        text="──────    Або продовжити як гість    ──────",
-        font=("Arial", 11, "bold"),
-        text_color="#FFFFFF",
-        fg_color="transparent",
-        cursor="hand2"
+        text="Увійти як адміністратор",
+        width=270,
+        height=45,
+        corner_radius=15,
+        fg_color="#001B2E",
+        hover_color="#003047",
+        border_width=1,
+        border_color="#60D48C",
+        text_color="#60D48C",
+        font=("Arial", 14, "bold"),
+        command=open_admin
     )
-    guest_label.place(relx=0.5, y=610, anchor="n")
+    admin_button.place(x=25, y=565)
 
-    def continue_as_guest():
-        for widget in window.winfo_children():
-            widget.destroy()
-
-        window.configure(fg_color="#001B2E")
-
-        def back_to_welcome():
-            for widget in window.winfo_children():
-                widget.destroy()
-
-            welcome_page(window)
-
-        back_button = ctk.CTkButton(
-            window,
-            text="←",
-            width=40,
-            height=35,
-            corner_radius=10,
-            fg_color="transparent",
-            hover_color="#003047",
-            text_color="#FFFFFF",
-            font=("Arial", 24, "bold"),
-            command=back_to_welcome
-        )
-        back_button.place(x=15, y=15)
-
-        guest_title = ctk.CTkLabel(
-            window,
-            text="Вітаємо в Smart Aquarium!",
-            font=("Arial", 20, "bold"),
-            text_color="#00F8FB",
-            fg_color="transparent"
-        )
-        guest_title.place(x=20, y=200)
-
-        guest_subtitle = ctk.CTkLabel(
-            window,
-            text="Ви продовжуєте як гість",
-            font=("Arial", 14),
-            text_color="#FFFFFF",
-            fg_color="transparent"
-        )
-        guest_subtitle.place(x=50, y=245)
-
-    guest_label.bind(
-        "<Button-1>",
-        lambda event: continue_as_guest()
-    )
 
