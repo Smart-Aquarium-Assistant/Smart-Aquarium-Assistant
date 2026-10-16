@@ -50,6 +50,10 @@ def home_page(window, aquarium=None):
     # Іконка сповіщень
     bell_path = os.path.join(icons_folder, "bell.png")
 
+    def open_reminders():
+        from reminders import reminders_page
+        reminders_page(window, aquarium)
+
     if os.path.exists(bell_path):
         bell_photo = Image.open(bell_path).convert("RGBA")
 
@@ -69,7 +73,7 @@ def home_page(window, aquarium=None):
             fg_color="transparent",
             hover_color="#003047",
             border_width=0,
-            command=lambda: print("Сповіщення")
+            command=open_reminders
         )
         bell_button.place(x=270, y=15)
 
