@@ -574,7 +574,8 @@ def home_page(window, aquarium=None):
     )
     add_button.place(x=10, y=493)
 
-    # Нижня навігація: тільки іконки
+
+    # Нижня навігація
     navigation_frame = ctk.CTkFrame(
         main_frame,
         width=304,
@@ -596,8 +597,32 @@ def home_page(window, aquarium=None):
 
     navigation_images = []
 
-    for i in range(len(navigation_items)):
-        icon_file, page_name = navigation_items[i]
+    # Переходы между страницами
+    def navigate(page_name):
+        if page_name == "Аналіз":
+            from analysis import analysis_page
+
+            analysis_page(
+                window,
+                back_command=lambda: home_page(window, aquarium)
+            )
+
+        elif page_name == "Головна":
+            home_page(window, aquarium)
+
+        elif page_name == "Догляд":
+            from aquarium import aquarium_page
+            aquarium_page(window, aquarium)
+
+        elif page_name == "Історія":
+            from fish import fish_page
+            fish_page(window, aquarium)
+
+        elif page_name == "Профіль":
+            from styles import profile_page
+            profile_page(window)
+
+    for i, (icon_file, page_name) in enumerate(navigation_items):
         icon_path = os.path.join(icons_folder, icon_file)
 
         icon_image = None
@@ -610,6 +635,7 @@ def home_page(window, aquarium=None):
                 dark_image=icon_photo,
                 size=(30, 30)
             )
+
             navigation_images.append(icon_image)
 
         nav_button = ctk.CTkButton(
@@ -624,7 +650,7 @@ def home_page(window, aquarium=None):
             ),
             hover_color="#00506B",
             border_width=0,
-            command=lambda name=page_name: print(name)
+            command=lambda name=page_name: navigate(name)
         )
 
         nav_button.place(
@@ -632,7 +658,8 @@ def home_page(window, aquarium=None):
             y=5
         )
 
-    # Зберігаємо посилання на зображення
+    # Сохраняем ссылки на изображения
     main_frame.parameter_images = parameter_images
     main_frame.navigation_images = navigation_images
+
 
