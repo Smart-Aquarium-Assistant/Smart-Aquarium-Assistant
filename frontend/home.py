@@ -597,14 +597,13 @@ def home_page(window, aquarium=None):
 
     navigation_images = []
 
-    # Переходы между страницами
     def navigate(page_name):
         if page_name == "Аналіз":
             from analysis import analysis_page
-
             analysis_page(
                 window,
-                back_command=lambda: home_page(window, aquarium)
+                back_command=lambda: home_page(window, aquarium),
+                aquarium=aquarium
             )
 
         elif page_name == "Головна":
@@ -619,8 +618,8 @@ def home_page(window, aquarium=None):
             fish_page(window, aquarium)
 
         elif page_name == "Профіль":
-            from styles import profile_page
-            profile_page(window)
+            from profile import profile_page
+            profile_page(window, aquarium)
 
     for i, (icon_file, page_name) in enumerate(navigation_items):
         icon_path = os.path.join(icons_folder, icon_file)

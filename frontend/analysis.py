@@ -1,4 +1,3 @@
-
 import os
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
@@ -8,7 +7,7 @@ from PIL import Image
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ICONS_DIR = os.path.join(BASE_DIR, "assets", "icons")
 
-BG_COLOR = "#001B2E"
+BG_COLOR = "#00121F"
 CARD_COLOR = "#003B55"
 CYAN = "#00F8FB"
 WHITE = "#FFFFFF"
@@ -218,7 +217,6 @@ def analysis_page(window, back_command=None, aquarium=None):
     )
     analyze_button.pack(fill="x", padx=18, pady=(0, 16))
 
-
     # ---------- AI-АССИСТЕНТ ----------
 
     assistant_frame = ctk.CTkFrame(
@@ -299,7 +297,7 @@ def analysis_page(window, back_command=None, aquarium=None):
         card = ctk.CTkFrame(
             cards_frame,
             fg_color=CARD_COLOR,
-            border_color="#B8D0DA",
+            border_color=CYAN,
             border_width=1,
             corner_radius=15
         )
@@ -379,7 +377,7 @@ def analysis_page(window, back_command=None, aquarium=None):
         corner_radius=20,
         fg_color="#003047",
         border_width=1,
-        border_color="#91B7C7"
+        border_color=CYAN
     )
     bottom_frame.pack(
         side="bottom",
@@ -406,18 +404,21 @@ def analysis_page(window, back_command=None, aquarium=None):
         elif page_name == "Головна":
             if back_command:
                 back_command()
+            else:
+                from home import home_page
+                home_page(window, aquarium)
 
         elif page_name == "Догляд":
             from aquarium import aquarium_page
-            aquarium_page(window, None)
+            aquarium_page(window, aquarium)
 
         elif page_name == "Історія":
             from fish import fish_page
-            fish_page(window, None)
+            fish_page(window, aquarium)
 
         elif page_name == "Профіль":
-            from styles import profile_page
-            profile_page(window)
+            from profile import profile_page
+            profile_page(window, aquarium)
 
     for i, (icon_file, page_name) in enumerate(navigation_items):
         icon_path = os.path.join(ICONS_DIR, icon_file)
