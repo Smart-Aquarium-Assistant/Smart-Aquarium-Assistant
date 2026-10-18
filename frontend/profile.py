@@ -23,7 +23,7 @@ def profile_page(window, aquarium=None):
         widget.destroy()
 
     window.unbind("<Configure>")
-    window.geometry("320x720")
+    window.geometry("320x650")
     window.resizable(False, False)
     window.configure(fg_color=BG_COLOR)
 
@@ -42,7 +42,7 @@ def profile_page(window, aquarium=None):
     main_frame = ctk.CTkFrame(
         window,
         width=320,
-        height=720,
+        height=650,
         corner_radius=0,
         fg_color=BG_COLOR,
         border_width=0
@@ -58,17 +58,17 @@ def profile_page(window, aquarium=None):
     back_button = ctk.CTkButton(
         main_frame,
         text="←",
-        width=36,
-        height=36,
+        width=34,
+        height=34,
         corner_radius=10,
         fg_color="transparent",
         hover_color=CARD_COLOR,
         text_color=CYAN,
-        font=("Arial", 28, "bold"),
+        font=("Arial", 27, "bold"),
         border_width=0,
         command=open_home
     )
-    back_button.place(x=17, y=10)
+    back_button.place(x=12, y=8)
 
     title_label = ctk.CTkLabel(
         main_frame,
@@ -78,7 +78,7 @@ def profile_page(window, aquarium=None):
         fg_color="transparent",
         bg_color=BG_COLOR
     )
-    title_label.place(relx=0.5, y=28, anchor="center")
+    title_label.place(relx=0.5, y=25, anchor="center")
 
     # ---------- КАЛЕНДАР ----------
 
@@ -97,7 +97,7 @@ def profile_page(window, aquarium=None):
             calendar_image = ctk.CTkImage(
                 light_image=calendar_original,
                 dark_image=calendar_original,
-                size=(25, 25)
+                size=(23, 23)
             )
         except Exception:
             pass
@@ -106,17 +106,17 @@ def profile_page(window, aquarium=None):
         main_frame,
         text="" if calendar_image else "▦",
         image=calendar_image,
-        width=35,
-        height=35,
+        width=34,
+        height=34,
         corner_radius=9,
         fg_color="transparent",
         hover_color=CARD_COLOR,
         text_color="#D9F5FF",
-        font=("Arial", 23),
+        font=("Arial", 22),
         border_width=0,
         command=lambda: print("Календар")
     )
-    calendar_button.place(x=275, y=10)
+    calendar_button.place(x=274, y=8)
     main_frame.calendar_image = calendar_image
 
     # ---------- ПОШУК АВАТАРА ----------
@@ -146,7 +146,7 @@ def profile_page(window, aquarium=None):
 
     # ---------- ОБРОБКА КРУГЛОГО АВАТАРА ----------
 
-    AVATAR_SIZE = 100
+    AVATAR_SIZE = 88
 
     def load_avatar(path):
 
@@ -195,7 +195,7 @@ def profile_page(window, aquarium=None):
             print(f"Помилка завантаження аватара: {error}")
             return None
 
-    # ---------- КРУГЛИЙ АВАТАР ----------
+    # ---------- АВАТАР ----------
 
     avatar_frame = ctk.CTkFrame(
         main_frame,
@@ -205,7 +205,7 @@ def profile_page(window, aquarium=None):
         fg_color=BG_COLOR,
         border_width=0
     )
-    avatar_frame.place(x=25, y=82)
+    avatar_frame.place(x=18, y=54)
     avatar_frame.pack_propagate(False)
 
     avatar_image = (
@@ -224,7 +224,7 @@ def profile_page(window, aquarium=None):
         fg_color=BG_COLOR,
         bg_color=BG_COLOR,
         text_color=CYAN,
-        font=("Arial", 55, "bold")
+        font=("Arial", 48, "bold")
     )
     avatar_label.place(x=0, y=0, anchor="nw")
 
@@ -235,22 +235,22 @@ def profile_page(window, aquarium=None):
     avatar_button = ctk.CTkButton(
         main_frame,
         text=(
-            "Редагувати аватар"
+            "Редагувати фото"
             if PROFILE_AVATAR_PATH
             and os.path.exists(PROFILE_AVATAR_PATH)
             else "Завантажити фото"
         ),
-        width=130,
-        height=27,
-        corner_radius=10,
+        width=112,
+        height=25,
+        corner_radius=9,
         fg_color=CARD_COLOR,
         hover_color="#00445C",
         border_width=1,
         border_color=CYAN,
         text_color=CYAN,
-        font=("Arial", 10, "bold")
+        font=("Arial", 9, "bold")
     )
-    avatar_button.place(x=10, y=187)
+    avatar_button.place(x=6, y=145)
 
     def choose_avatar():
 
@@ -290,7 +290,7 @@ def profile_page(window, aquarium=None):
         main_frame.avatar_image = new_image
 
         avatar_button.configure(
-            text="Редагувати аватар"
+            text="Редагувати фото"
         )
 
     avatar_button.configure(command=choose_avatar)
@@ -312,40 +312,40 @@ def profile_page(window, aquarium=None):
     name_label = ctk.CTkLabel(
         main_frame,
         text="Настя",
-        font=("Arial", 22, "bold"),
+        font=("Arial", 21, "bold"),
         text_color=WHITE,
         fg_color="transparent",
         bg_color=BG_COLOR,
         anchor="w"
     )
-    name_label.place(x=140, y=105)
+    name_label.place(x=119, y=70)
 
     level_label = ctk.CTkLabel(
         main_frame,
         text="Рівень 3",
-        font=("Arial", 14, "bold"),
+        font=("Arial", 13, "bold"),
         text_color=WHITE,
         fg_color="transparent",
         bg_color=BG_COLOR,
         anchor="w"
     )
-    level_label.place(x=140, y=141)
+    level_label.place(x=120, y=101)
 
     progress_bg = ctk.CTkFrame(
         main_frame,
-        width=140,
-        height=10,
-        corner_radius=0,
+        width=111,
+        height=8,
+        corner_radius=5,
         fg_color=CARD_COLOR,
         border_width=0
     )
-    progress_bg.place(x=140, y=165)
+    progress_bg.place(x=120, y=128)
 
     progress_fill = ctk.CTkFrame(
         progress_bg,
-        width=91,
-        height=10,
-        corner_radius=0,
+        width=72,
+        height=8,
+        corner_radius=5,
         fg_color=CYAN,
         border_width=0
     )
@@ -359,40 +359,40 @@ def profile_page(window, aquarium=None):
         fg_color="transparent",
         bg_color=BG_COLOR
     )
-    progress_text.place(x=251, y=163)
+    progress_text.place(x=235, y=124)
 
     # ---------- СТАТИСТИКА ----------
 
     stats_frame = ctk.CTkFrame(
         main_frame,
-        width=298,
-        height=100,
-        corner_radius=14,
+        width=296,
+        height=78,
+        corner_radius=13,
         fg_color=CARD_DARK,
         border_width=1,
         border_color=CYAN
     )
-    stats_frame.place(x=11, y=218)
+    stats_frame.place(x=12, y=180)
 
     stats = [
-        ("3", "Акваріумів"),
+        ("3", "Акваріуми"),
         ("12", "Рибок"),
         ("5", "Завдань")
     ]
 
     for i, (number, caption) in enumerate(stats):
 
-        x = i * 99
+        x = i * 98
 
         if i > 0:
             separator = ctk.CTkFrame(
                 stats_frame,
                 width=1,
-                height=98,
+                height=60,
                 fg_color="#91B7C7",
                 border_width=0
             )
-            separator.place(x=x, y=0)
+            separator.place(x=x, y=9)
 
         number_label = ctk.CTkLabel(
             stats_frame,
@@ -404,24 +404,24 @@ def profile_page(window, aquarium=None):
         )
         number_label.place(
             x=x + 49,
-            y=35,
+            y=25,
             anchor="center"
         )
 
         caption_label = ctk.CTkLabel(
             stats_frame,
             text=caption,
-            font=("Arial", 11),
+            font=("Arial", 10),
             text_color=WHITE,
             fg_color="transparent",
             bg_color=CARD_DARK,
-            width=94,
-            wraplength=90,
+            width=90,
+            wraplength=88,
             justify="center"
         )
         caption_label.place(
             x=x + 49,
-            y=66,
+            y=51,
             anchor="center"
         )
 
@@ -457,19 +457,20 @@ def profile_page(window, aquarium=None):
             from fish import fish_page
             fish_page(window, aquarium)
 
-    menu_y_positions = [333, 408, 483, 558]
+    menu_y_positions = [273, 334, 395, 456]
 
     for index, (icon_file, caption, action) in enumerate(menu_items):
 
         y = menu_y_positions[index]
 
         # Картка меню
+
         menu_button = ctk.CTkButton(
             main_frame,
             text="",
             width=296,
-            height=69,
-            corner_radius=14,
+            height=55,
+            corner_radius=12,
             fg_color=CARD_COLOR,
             hover_color="#00445C",
             border_width=1,
@@ -478,7 +479,8 @@ def profile_page(window, aquarium=None):
         )
         menu_button.place(x=12, y=y)
 
-        # Іконка всередині картки
+        # Іконка PNG
+
         icon_path = os.path.join(
             icons_folder, icon_file
         )
@@ -492,7 +494,7 @@ def profile_page(window, aquarium=None):
                 icon_image = ctk.CTkImage(
                     light_image=icon_original,
                     dark_image=icon_original,
-                    size=(34, 34)
+                    size=(25, 25)
                 )
 
                 menu_images.append(icon_image)
@@ -503,76 +505,81 @@ def profile_page(window, aquarium=None):
                     image=icon_image,
                     fg_color="transparent",
                     bg_color=CARD_COLOR,
-                    width=40,
-                    height=40
+                    width=30,
+                    height=30
                 )
                 icon_label.place(
-                    x=12,
+                    x=13,
                     rely=0.5,
                     anchor="w"
                 )
                 icon_label.image = icon_image
 
-            except Exception:
-                pass
+            except Exception as error:
+                print(
+                    f"Помилка завантаження іконки "
+                    f"{icon_file}: {error}"
+                )
 
-        # Текст: ограниченная ширина и перенос строк
+        # Текст меню
+
         text_label = ctk.CTkLabel(
             menu_button,
             text=caption,
-            font=("Arial", 14, "bold"),
+            font=("Arial", 12, "bold"),
             text_color=WHITE,
             fg_color="transparent",
             bg_color=CARD_COLOR,
             anchor="w",
             justify="left",
-            width=165,
-            wraplength=165
+            width=190,
+            wraplength=190
         )
         text_label.place(
-            x=64,
+            x=53,
             rely=0.5,
             anchor="w"
         )
 
-        # Стрелка: строго по центру карточки по вертикали
+        # Стрілка
+
         arrow_label = ctk.CTkLabel(
             menu_button,
             text="➜",
-            font=("Arial", 25, "bold"),
+            font=("Arial", 20, "bold"),
             text_color=CYAN,
             fg_color="transparent",
             bg_color=CARD_COLOR,
-            width=32,
-            height=40
+            width=24,
+            height=30
         )
         arrow_label.place(
             relx=1.0,
             rely=0.5,
-            x=-10,
+            x=-7,
             anchor="e"
         )
 
     main_frame.menu_images = menu_images
 
-    # ---------- НИЖНЯЯ НАВІГАЦІЯ ----------
+    # ---------- НИЖНЯ НАВІГАЦІЯ ----------
 
     navigation_frame = ctk.CTkFrame(
         main_frame,
         width=296,
-        height=64,
-        corner_radius=20,
+        height=54,
+        corner_radius=17,
         fg_color=CARD_COLOR,
         border_width=1,
         border_color="#91B7C7"
     )
-    navigation_frame.place(x=12, y=643)
+    navigation_frame.place(x=12, y=582)
 
     navigation_items = [
         ("home.png", "Головна"),
         ("analysis.png", "Аналіз"),
         ("care.png", "Догляд"),
-        ("history.png", "Історія"),
+        ("history1.png", "Історія"),
         ("profile.png", "Профіль")
     ]
 
@@ -619,7 +626,7 @@ def profile_page(window, aquarium=None):
                 icon_image = ctk.CTkImage(
                     light_image=icon_original,
                     dark_image=icon_original,
-                    size=(25, 25)
+                    size=(23, 23)
                 )
 
                 navigation_images.append(icon_image)
@@ -631,9 +638,9 @@ def profile_page(window, aquarium=None):
             navigation_frame,
             text="",
             image=icon_image,
-            width=46,
-            height=50,
-            corner_radius=12,
+            width=45,
+            height=44,
+            corner_radius=11,
             fg_color=(
                 "#00435A"
                 if page_name == "Профіль"
@@ -643,6 +650,6 @@ def profile_page(window, aquarium=None):
             border_width=0,
             command=lambda name=page_name: navigate(name)
         )
-        nav_button.place(x=3 + i * 58, y=5)
+        nav_button.place(x=4 + i * 58, y=4)
 
     navigation_frame.navigation_images = navigation_images

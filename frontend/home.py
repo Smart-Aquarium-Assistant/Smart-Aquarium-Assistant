@@ -591,7 +591,7 @@ def home_page(window, aquarium=None):
         ("home.png", "Головна"),
         ("analysis.png", "Аналіз"),
         ("care.png", "Догляд"),
-        ("history.png", "Історія"),
+        ("history1.png", "Історія"),
         ("profile.png", "Профіль")
     ]
 

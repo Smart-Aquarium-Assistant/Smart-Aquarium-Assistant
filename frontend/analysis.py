@@ -391,7 +391,7 @@ def analysis_page(window, back_command=None, aquarium=None):
         ("home.png", "Головна"),
         ("analysis.png", "Аналіз"),
         ("care.png", "Догляд"),
-        ("history.png", "Історія"),
+        ("history1.png", "Історія"),
         ("profile.png", "Профіль")
     ]
 
