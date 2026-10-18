@@ -404,21 +404,24 @@ def profile_page(window, aquarium=None):
         )
         number_label.place(
             x=x + 49,
-            y=38,
+            y=35,
             anchor="center"
         )
 
         caption_label = ctk.CTkLabel(
             stats_frame,
             text=caption,
-            font=("Arial", 12),
+            font=("Arial", 11),
             text_color=WHITE,
             fg_color="transparent",
-            bg_color=CARD_DARK
+            bg_color=CARD_DARK,
+            width=94,
+            wraplength=90,
+            justify="center"
         )
         caption_label.place(
             x=x + 49,
-            y=67,
+            y=66,
             anchor="center"
         )
 
@@ -489,7 +492,7 @@ def profile_page(window, aquarium=None):
                 icon_image = ctk.CTkImage(
                     light_image=icon_original,
                     dark_image=icon_original,
-                    size=(38, 38)
+                    size=(34, 34)
                 )
 
                 menu_images.append(icon_image)
@@ -499,46 +502,55 @@ def profile_page(window, aquarium=None):
                     text="",
                     image=icon_image,
                     fg_color="transparent",
-                    bg_color=CARD_COLOR
+                    bg_color=CARD_COLOR,
+                    width=40,
+                    height=40
                 )
                 icon_label.place(
-                    x=18,
-                    y=15
+                    x=12,
+                    rely=0.5,
+                    anchor="w"
                 )
                 icon_label.image = icon_image
 
             except Exception:
                 pass
 
-        # Текст на фоне карточки, без чёрной подложки
+        # Текст: ограниченная ширина и перенос строк
         text_label = ctk.CTkLabel(
             menu_button,
             text=caption,
-            font=("Arial", 15, "bold"),
+            font=("Arial", 14, "bold"),
             text_color=WHITE,
             fg_color="transparent",
             bg_color=CARD_COLOR,
             anchor="w",
-            width=170
+            justify="left",
+            width=165,
+            wraplength=165
         )
         text_label.place(
-            x=76,
-            y=0,
-            relheight=1
+            x=64,
+            rely=0.5,
+            anchor="w"
         )
 
-        # Стрелка внутри карточки
+        # Стрелка: строго по центру карточки по вертикали
         arrow_label = ctk.CTkLabel(
             menu_button,
             text="➜",
-            font=("Arial", 27, "bold"),
+            font=("Arial", 25, "bold"),
             text_color=CYAN,
             fg_color="transparent",
-            bg_color=CARD_COLOR
+            bg_color=CARD_COLOR,
+            width=32,
+            height=40
         )
         arrow_label.place(
-            x=244,
-            y=12
+            relx=1.0,
+            rely=0.5,
+            x=-10,
+            anchor="e"
         )
 
     main_frame.menu_images = menu_images
