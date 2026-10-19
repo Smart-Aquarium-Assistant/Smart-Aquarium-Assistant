@@ -380,19 +380,25 @@ def profile_page(window, aquarium=None):
         ("5", "Завдань")
     ]
 
+    # Вертикальні розділювачі на всю висоту картки
+    for x in (98, 197):
+        separator = ctk.CTkFrame(
+            stats_frame,
+            width=2,
+            height=76,
+            corner_radius=0,
+            fg_color="#FFFFFF",
+            border_width=0
+        )
+        separator.place(
+            x=x,
+            y=0
+        )
+
+    # Числа та підписи
     for i, (number, caption) in enumerate(stats):
 
-        x = i * 98
-
-        if i > 0:
-            separator = ctk.CTkFrame(
-                stats_frame,
-                width=1,
-                height=60,
-                fg_color="#91B7C7",
-                border_width=0
-            )
-            separator.place(x=x, y=9)
+        center_x = [49, 148, 246][i]
 
         number_label = ctk.CTkLabel(
             stats_frame,
@@ -400,10 +406,10 @@ def profile_page(window, aquarium=None):
             font=("Arial", 19, "bold"),
             text_color=WHITE,
             fg_color="transparent",
-            bg_color=CARD_DARK
+            bg_color="transparent"
         )
         number_label.place(
-            x=x + 49,
+            x=center_x,
             y=25,
             anchor="center"
         )
@@ -414,13 +420,13 @@ def profile_page(window, aquarium=None):
             font=("Arial", 10),
             text_color=WHITE,
             fg_color="transparent",
-            bg_color=CARD_DARK,
+            bg_color="transparent",
             width=90,
             wraplength=88,
             justify="center"
         )
         caption_label.place(
-            x=x + 49,
+            x=center_x,
             y=51,
             anchor="center"
         )
@@ -457,19 +463,19 @@ def profile_page(window, aquarium=None):
             from fish import fish_page
             fish_page(window, aquarium)
 
-    menu_y_positions = [273, 334, 395, 456]
+    # Збільшені відстані між картками
+    menu_y_positions = [273, 350, 427, 504]
 
     for index, (icon_file, caption, action) in enumerate(menu_items):
 
         y = menu_y_positions[index]
 
         # Картка меню
-
         menu_button = ctk.CTkButton(
             main_frame,
             text="",
             width=296,
-            height=55,
+            height=65,
             corner_radius=12,
             fg_color=CARD_COLOR,
             hover_color="#00445C",
@@ -480,7 +486,6 @@ def profile_page(window, aquarium=None):
         menu_button.place(x=12, y=y)
 
         # Іконка PNG
-
         icon_path = os.path.join(
             icons_folder, icon_file
         )
@@ -494,7 +499,7 @@ def profile_page(window, aquarium=None):
                 icon_image = ctk.CTkImage(
                     light_image=icon_original,
                     dark_image=icon_original,
-                    size=(25, 25)
+                    size=(27, 27)
                 )
 
                 menu_images.append(icon_image)
@@ -522,7 +527,6 @@ def profile_page(window, aquarium=None):
                 )
 
         # Текст меню
-
         text_label = ctk.CTkLabel(
             menu_button,
             text=caption,
@@ -542,7 +546,6 @@ def profile_page(window, aquarium=None):
         )
 
         # Стрілка
-
         arrow_label = ctk.CTkLabel(
             menu_button,
             text="➜",
@@ -562,18 +565,24 @@ def profile_page(window, aquarium=None):
 
     main_frame.menu_images = menu_images
 
-    # ---------- НИЖНЯ НАВІГАЦІЯ ----------
+    # ---------- НИЖНЯ ПАНЕЛЬ НАВІГАЦІЇ ----------
 
     navigation_frame = ctk.CTkFrame(
         main_frame,
-        width=296,
-        height=54,
-        corner_radius=17,
-        fg_color=CARD_COLOR,
+        width=304,
+        height=65,
+        corner_radius=20,
+        fg_color="#003047",
         border_width=1,
-        border_color="#91B7C7"
+        border_color=CYAN
     )
-    navigation_frame.place(x=12, y=582)
+
+    navigation_frame.place(
+        x=8,
+        y=581
+    )
+
+    navigation_frame.pack_propagate(False)
 
     navigation_items = [
         ("home.png", "Головна"),
@@ -592,6 +601,7 @@ def profile_page(window, aquarium=None):
 
         elif page_name == "Аналіз":
             from analysis import analysis_page
+
             analysis_page(
                 window,
                 back_command=open_home,
@@ -600,10 +610,12 @@ def profile_page(window, aquarium=None):
 
         elif page_name == "Догляд":
             from aquarium import aquarium_page
+
             aquarium_page(window, aquarium)
 
         elif page_name == "Історія":
             from fish import fish_page
+
             fish_page(window, aquarium)
 
         elif page_name == "Профіль":
@@ -612,7 +624,8 @@ def profile_page(window, aquarium=None):
     for i, (icon_file, page_name) in enumerate(navigation_items):
 
         icon_path = os.path.join(
-            icons_folder, icon_file
+            icons_folder,
+            icon_file
         )
 
         icon_image = None
@@ -626,7 +639,7 @@ def profile_page(window, aquarium=None):
                 icon_image = ctk.CTkImage(
                     light_image=icon_original,
                     dark_image=icon_original,
-                    size=(23, 23)
+                    size=(30, 30)
                 )
 
                 navigation_images.append(icon_image)
@@ -638,9 +651,9 @@ def profile_page(window, aquarium=None):
             navigation_frame,
             text="",
             image=icon_image,
-            width=45,
-            height=44,
-            corner_radius=11,
+            width=48,
+            height=52,
+            corner_radius=12,
             fg_color=(
                 "#00435A"
                 if page_name == "Профіль"
@@ -650,6 +663,11 @@ def profile_page(window, aquarium=None):
             border_width=0,
             command=lambda name=page_name: navigate(name)
         )
-        nav_button.place(x=4 + i * 58, y=4)
+
+        nav_button.place(
+            x=4 + i * 59,
+            y=5
+        )
 
     navigation_frame.navigation_images = navigation_images
+
