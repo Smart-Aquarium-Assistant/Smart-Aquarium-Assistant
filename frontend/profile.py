@@ -454,9 +454,15 @@ def profile_page(window, aquarium=None):
             )
 
         elif item == "settings":
-            messagebox.showinfo(
-                "Налаштування",
-                "Сторінка налаштувань буде додана пізніше."
+            from settings import settings_page
+
+            settings_page(
+                window,
+                aquarium=aquarium,
+                back_command=lambda: profile_page(
+                    window,
+                    aquarium
+                )
             )
 
         elif item == "history":
@@ -609,14 +615,13 @@ def profile_page(window, aquarium=None):
             )
 
         elif page_name == "Догляд":
-            from aquarium import aquarium_page
-
-            aquarium_page(window, aquarium)
+            from care import care_page
+            care_page(window, aquarium)
 
         elif page_name == "Історія":
-            from fish import fish_page
+            from history import history_page
 
-            fish_page(window, aquarium)
+            history_page(window, aquarium)
 
         elif page_name == "Профіль":
             profile_page(window, aquarium)

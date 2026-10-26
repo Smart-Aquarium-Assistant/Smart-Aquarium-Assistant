@@ -409,12 +409,12 @@ def analysis_page(window, back_command=None, aquarium=None):
                 home_page(window, aquarium)
 
         elif page_name == "Догляд":
-            from aquarium import aquarium_page
-            aquarium_page(window, aquarium)
+            from care import care_page
+            care_page(window, aquarium)
 
         elif page_name == "Історія":
-            from fish import fish_page
-            fish_page(window, aquarium)
+            from history import history_page
+            history_page(window, aquarium)
 
         elif page_name == "Профіль":
             from profile import profile_page
