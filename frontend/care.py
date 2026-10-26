@@ -1,4 +1,3 @@
-
 import customtkinter as ctk
 import os
 from PIL import Image
@@ -6,7 +5,7 @@ from PIL import Image
 
 def care_page(window, aquarium=None):
 
-    # ---------- ОЧИЩЕННЯ ПОТОЧНОЇ СТОРІНКИ ----------
+    # ---------- ОЧИЩЕННЯ СТОРІНКИ ----------
 
     for widget in window.winfo_children():
         widget.destroy()
@@ -16,64 +15,65 @@ def care_page(window, aquarium=None):
     window.resizable(False, False)
     window.configure(fg_color="#00121F")
 
+    BG = "#00121F"
     CYAN = "#00EAF5"
-    CARD_BLUE = "#003047"
+    CARD = "#003047"
     WHITE = "#FFFFFF"
     GREEN = "#60D48C"
+    GRAY = "#A8C4D0"
 
     ROOT_DIR = os.path.dirname(
         os.path.dirname(os.path.abspath(__file__))
     )
     ICONS_DIR = os.path.join(ROOT_DIR, "assets", "icons")
 
-    navigation_images = []
     task_images = []
+    navigation_images = []
 
     # ---------- ГОЛОВНИЙ ФРЕЙМ ----------
 
     main_frame = ctk.CTkFrame(
         window,
-        fg_color="#00121F",
+        fg_color=BG,
         corner_radius=0
     )
     main_frame.pack(fill="both", expand=True)
 
     # ---------- ВЕРХНЯ ПАНЕЛЬ ----------
 
-    header_frame = ctk.CTkFrame(
+    header = ctk.CTkFrame(
         main_frame,
-        fg_color="transparent",
-        height=48
+        width=304,
+        height=45,
+        fg_color="transparent"
     )
-    header_frame.pack(fill="x", padx=12, pady=(12, 0))
-    header_frame.pack_propagate(False)
+    header.place(x=8, y=7)
+    header.pack_propagate(False)
 
     def go_back():
         from home import home_page
         home_page(window, aquarium)
 
-    back_button = ctk.CTkButton(
-        header_frame,
+    ctk.CTkButton(
+        header,
         text="←",
         width=30,
         height=32,
         font=("Arial", 27, "bold"),
         text_color=CYAN,
         fg_color="transparent",
-        hover_color=CARD_BLUE,
+        hover_color=CARD,
         command=go_back
-    )
-    back_button.place(x=0, y=0)
+    ).place(x=0, y=0)
 
-    title_label = ctk.CTkLabel(
-        header_frame,
+    ctk.CTkLabel(
+        header,
         text="Догляд",
         font=("Arial", 18, "bold"),
         text_color=WHITE
-    )
-    title_label.place(relx=0.5, y=15, anchor="center")
+    ).place(relx=0.5, y=17, anchor="center")
 
-    # ---------- ІКОНКА СПОВІЩЕНЬ ----------
+    # ---------- СПОВІЩЕННЯ ----------
 
     def open_reminders():
         from reminders import reminders_page
@@ -82,55 +82,65 @@ def care_page(window, aquarium=None):
     bell_path = os.path.join(ICONS_DIR, "bell.png")
 
     if os.path.exists(bell_path):
+        try:
+            bell_original = Image.open(
+                bell_path
+            ).convert("RGBA")
 
-        bell_original = Image.open(
-            bell_path
-        ).convert("RGBA")
+            bell_image = ctk.CTkImage(
+                light_image=bell_original,
+                dark_image=bell_original,
+                size=(23, 23)
+            )
+            task_images.append(bell_image)
 
-        bell_image = ctk.CTkImage(
-            light_image=bell_original,
-            dark_image=bell_original,
-            size=(24, 24)
-        )
+            bell_button = ctk.CTkButton(
+                header,
+                text="",
+                image=bell_image,
+                width=30,
+                height=32,
+                fg_color="transparent",
+                hover_color=CARD,
+                command=open_reminders
+            )
 
-        task_images.append(bell_image)
-
-        bell_button = ctk.CTkButton(
-            header_frame,
-            text="",
-            image=bell_image,
-            width=30,
-            height=32,
-            fg_color="transparent",
-            hover_color=CARD_BLUE,
-            command=open_reminders
-        )
-
+        except Exception:
+            bell_button = ctk.CTkButton(
+                header,
+                text="♧",
+                width=30,
+                height=32,
+                font=("Arial", 20),
+                text_color=CYAN,
+                fg_color="transparent",
+                hover_color=CARD,
+                command=open_reminders
+            )
     else:
-
         bell_button = ctk.CTkButton(
-            header_frame,
-            text="♟",
+            header,
+            text="♧",
             width=30,
             height=32,
-            font=("Arial", 22),
+            font=("Arial", 20),
             text_color=CYAN,
             fg_color="transparent",
-            hover_color=CARD_BLUE,
+            hover_color=CARD,
             command=open_reminders
         )
 
-    bell_button.place(x=266, y=0)
+    bell_button.place(x=264, y=0)
 
     # ---------- КАЛЕНДАР ----------
 
     calendar_frame = ctk.CTkFrame(
         main_frame,
-        fg_color="transparent",
-        height=65
+        width=300,
+        height=85,
+        fg_color="transparent"
     )
-    calendar_frame.pack(fill="x", padx=17, pady=(0, 0))
-    calendar_frame.pack_propagate(False)
+    calendar_frame.place(x=10, y=70)
 
     week_days = [
         ("Пн", "6"),
@@ -142,312 +152,311 @@ def care_page(window, aquarium=None):
         ("Нд", "12")
     ]
 
-    selected_day = [0]
     day_buttons = []
+    selected_day = [0]
 
-    def select_day(day_index):
-
-        selected_day[0] = day_index
+    def select_day(index):
+        selected_day[0] = index
 
         for i, button in enumerate(day_buttons):
-
-            if i == selected_day[0]:
+            if i == index:
                 button.configure(
                     fg_color="#00415C",
                     border_color=CYAN
                 )
             else:
                 button.configure(
-                    fg_color=CARD_BLUE,
+                    fg_color=CARD,
                     border_color="#A8C4D0"
                 )
 
-    for i, (day_name, day_number) in enumerate(week_days):
+    # Ширина кнопки — 39 px, расстояние между кнопками — 3 px.
+    # Общая ширина календаря — 291 px, он расположен по центру.
 
-        day_button = ctk.CTkButton(
+    button_width = 39
+    button_gap = 3
+    total_width = len(week_days) * button_width + (
+            len(week_days) - 1
+    ) * button_gap
+
+    start_x = (300 - total_width) // 2
+
+    for i, (day, number) in enumerate(week_days):
+        button = ctk.CTkButton(
             calendar_frame,
-            text=day_name + "\n\n" + day_number,
-            width=42,
-            height=65,
-            corner_radius=14,
-            font=("Arial", 13, "bold"),
+            text=day + "\n" + number,
+            width=button_width,
+            height=85,
+            corner_radius=13,
+            font=("Arial", 13),
             text_color=WHITE,
-            fg_color="#00415C" if i == 0 else CARD_BLUE,
+            fg_color="#00415C" if i == 0 else CARD,
             hover_color="#00506B",
             border_width=1,
             border_color=CYAN if i == 0 else "#A8C4D0",
             command=lambda index=i: select_day(index)
         )
 
-        day_button.place(x=i * 45, y=0)
-        day_buttons.append(day_button)
+        button.place(
+            x=start_x + i * (button_width + button_gap),
+            y=0
+        )
 
-    # ---------- ОБЛАСТЬ ЗАВДАНЬ ----------
+        day_buttons.append(button)
 
-    content_frame = ctk.CTkFrame(
-        main_frame,
-        fg_color="transparent"
-    )
-    content_frame.pack(
-        fill="both",
-        expand=True,
-        padx=17,
-        pady=(10, 0)
-    )
+    # ---------- ІКОНКИ ЗАВДАНЬ ----------
 
-    # ---------- ЗАГОЛОВОК СЬОГОДНІ ----------
-
-    today_label = ctk.CTkLabel(
-        content_frame,
-        text="Сьогодні",
-        font=("Arial", 17, "bold"),
-        text_color=WHITE
-    )
-    today_label.place(x=5, y=0)
-
-    # ---------- ЗАВАНТАЖЕННЯ ІКОНОК ----------
-
-    def load_icon(file_names, size=(38, 38)):
+    def load_icon(file_names, size=(35, 35)):
 
         for file_name in file_names:
+            path = os.path.join(ICONS_DIR, file_name)
 
-            icon_path = os.path.join(
-                ICONS_DIR,
-                file_name
-            )
+            if os.path.exists(path):
+                try:
+                    original = Image.open(
+                        path
+                    ).convert("RGBA")
 
-            if os.path.exists(icon_path):
+                    image = ctk.CTkImage(
+                        light_image=original,
+                        dark_image=original,
+                        size=size
+                    )
 
-                original_image = Image.open(
-                    icon_path
-                ).convert("RGBA")
+                    task_images.append(image)
+                    return image
 
-                icon_image = ctk.CTkImage(
-                    light_image=original_image,
-                    dark_image=original_image,
-                    size=size
-                )
-
-                task_images.append(icon_image)
-
-                return icon_image
+                except Exception:
+                    pass
 
         return None
 
     water_icon = load_icon(
-        ["water.png", "drop.png", "water_drop.png"],
-        (38, 38)
+        ["water.png", "drop.png", "water_drop.png"]
     )
 
     cleaning_icon = load_icon(
-        ["cleaning.png", "calendar.png", "clean.png"],
-        (38, 38)
+        ["cleaning.png", "clean.png", "calendar.png"]
     )
 
     filter_icon = load_icon(
-        ["filter.png", "calendar_clock.png", "calendar.png"],
-        (38, 38)
+        ["filter.png", "calendar_clock.png", "calendar.png"]
     )
 
     feeding_icon = load_icon(
-        ["fish.png", "feeding.png", "food.png"],
-        (42, 38)
+        ["fish.png", "feeding.png", "food.png"]
     )
 
-    # ---------- СТВОРЕННЯ КАРТКИ ЗАВДАННЯ ----------
+    # ---------- ОБЛАСТЬ ЗАВДАНЬ ----------
+
+    content = ctk.CTkFrame(
+        main_frame,
+        width=296,
+        height=415,
+        fg_color="transparent",
+        corner_radius=0
+    )
+    content.place(x=12, y=160)
+
+    # ---------- ЗАГОЛОВКИ СЕКЦІЙ ----------
+
+    def section_title(text, y):
+
+        ctk.CTkLabel(
+            content,
+            text=text,
+            width=280,
+            height=22,
+            font=("Arial", 16, "bold"),
+            text_color=WHITE,
+            anchor="w"
+        ).place(x=9, y=y)
+
+    # ---------- КАРТКА ЗАВДАННЯ ----------
 
     def create_task_card(
         y,
         title,
-        status,
         icon,
-        icon_fallback,
+        fallback,
         completed=False
     ):
 
         card = ctk.CTkFrame(
-            content_frame,
-            width=302,
-            height=76,
-            corner_radius=15,
-            fg_color=CARD_BLUE,
+            content,
+            width=268,
+            height=72,
+            corner_radius=13,
+            fg_color=CARD,
             border_width=1,
             border_color=CYAN
         )
-        card.place(x=0, y=y)
-
-        # ІКОНКА ЗАВДАННЯ
+        card.place(x=8, y=y)
 
         if icon:
-
             icon_label = ctk.CTkLabel(
                 card,
                 text="",
                 image=icon,
-                width=45,
-                height=42,
+                width=38,
+                height=38,
                 fg_color="transparent"
             )
-
         else:
-
             icon_label = ctk.CTkLabel(
                 card,
-                text=icon_fallback,
-                width=45,
-                height=42,
-                font=("Arial", 29),
+                text=fallback,
+                width=38,
+                height=38,
+                font=("Arial", 25),
                 text_color=CYAN,
                 fg_color="transparent"
             )
 
-        # ВИПРАВЛЕНО: width і height задаються вище,
-        # у place залишаються тільки координати.
+        icon_label.place(x=10, y=16)
 
-        icon_label.place(
-            x=17,
-            y=17
-        )
-
-        # НАЗВА ЗАВДАННЯ
-
-        task_title = ctk.CTkLabel(
+        ctk.CTkLabel(
             card,
             text=title,
-            font=("Arial", 16),
+            width=166,
+            height=23,
+            font=("Arial", 14),
             text_color=WHITE,
             anchor="w"
-        )
-        task_title.place(x=72, y=19)
-
-        # СТАТУС ЗАВДАННЯ
+        ).place(x=49, y=13)
 
         status_label = ctk.CTkLabel(
             card,
-            text=status,
-            font=("Arial", 13, "bold" if completed else "normal"),
+            text="Виконано" if completed else "Не виконано",
+            width=166,
+            height=19,
+            font=(
+                "Arial",
+                12,
+                "bold" if completed else "normal"
+            ),
             text_color=GREEN if completed else WHITE,
             anchor="w"
         )
-        status_label.place(x=72, y=45)
+        status_label.place(x=49, y=37)
 
-        task_state = [completed]
+        state = [completed]
 
-        if completed:
-            check_text = "✓"
-            check_color = "#35B975"
-        else:
-            check_text = "○"
-            check_color = "transparent"
+        check_button = ctk.CTkButton(
+            card,
+            text="✓" if completed else "○",
+            width=23,
+            height=23,
+            corner_radius=12,
+            font=("Arial", 15, "bold"),
+            text_color=WHITE if completed else GRAY,
+            fg_color="#35B878" if completed else "transparent",
+            hover_color="#168653",
+            border_width=0 if completed else 1,
+            border_color=GRAY
+        )
+        check_button.place(x=235, y=24)
 
         def toggle_task():
 
-            task_state[0] = not task_state[0]
+            state[0] = not state[0]
 
-            if task_state[0]:
-
+            if state[0]:
                 check_button.configure(
                     text="✓",
-                    fg_color="#35B975",
-                    text_color=WHITE
+                    fg_color="#35B878",
+                    text_color=WHITE,
+                    border_width=0
                 )
 
                 status_label.configure(
                     text="Виконано",
                     text_color=GREEN,
-                    font=("Arial", 13, "bold")
+                    font=("Arial", 12, "bold")
                 )
 
             else:
-
                 check_button.configure(
                     text="○",
                     fg_color="transparent",
-                    text_color="#D7E9EF"
+                    text_color=GRAY,
+                    border_width=1
                 )
 
                 status_label.configure(
                     text="Не виконано",
                     text_color=WHITE,
-                    font=("Arial", 13)
+                    font=("Arial", 12)
                 )
 
-        check_button = ctk.CTkButton(
-            card,
-            text=check_text,
-            width=25,
-            height=25,
-            corner_radius=13,
-            font=("Arial", 18, "bold"),
-            text_color=WHITE if completed else "#D7E9EF",
-            fg_color=check_color,
-            hover_color="#008F91",
-            border_width=0,
-            command=toggle_task
-        )
-        check_button.place(x=266, y=25)
+        check_button.configure(command=toggle_task)
 
-    # ---------- СЬОГОДНІ ----------
+    # ---------- РОЗТАШУВАННЯ ЗАВДАНЬ ----------
+
+    section_title("Сьогодні", 0)
 
     create_task_card(
-        30,
+        25,
         "Підміна води",
-        "Виконано",
         water_icon,
         "💧",
         True
     )
 
     create_task_card(
-        118,
+        104,
         "Очищення скла",
-        "Виконано",
         cleaning_icon,
         "▣",
         True
     )
 
-    # ---------- ЗАВТРА ----------
-
-    tomorrow_label = ctk.CTkLabel(
-        content_frame,
-        text="Завтра",
-        font=("Arial", 17, "bold"),
-        text_color=WHITE
-    )
-    tomorrow_label.place(x=0, y=204)
+    section_title("Завтра", 183)
 
     create_task_card(
-        234,
+        208,
         "Перевірка фільтра",
-        "Не виконано",
         filter_icon,
         "▣",
         False
     )
 
     create_task_card(
-        322,
+        287,
         "Годування",
-        "Не виконано",
         feeding_icon,
         "🐟",
         False
     )
 
-    # ---------- НАСТУПНІ ДНІ ----------
+    section_title("Наступні дні", 366)
 
-    upcoming_label = ctk.CTkLabel(
-        content_frame,
-        text="Наступні дні",
-        font=("Arial", 17, "bold"),
-        text_color=WHITE
+    # ---------- ПЛАНОВІ ЗАВДАННЯ ----------
+
+    upcoming_card = ctk.CTkFrame(
+        content,
+        width=268,
+        height=36,
+        corner_radius=12,
+        fg_color="#002638",
+        border_width=1,
+        border_color="#07516A"
     )
-    upcoming_label.place(x=0, y=410)
+    upcoming_card.place(x=8, y=391)
+
+    ctk.CTkLabel(
+        upcoming_card,
+        text="Планові завдання",
+        width=246,
+        height=30,
+        font=("Arial", 12),
+        text_color=GRAY,
+        anchor="w"
+    ).place(x=10, y=2)
 
     # ---------- НИЖНЯ ПАНЕЛЬ НАВІГАЦІЇ ----------
 
-    bottom_frame = ctk.CTkFrame(
+    navigation_frame = ctk.CTkFrame(
         main_frame,
         width=304,
         height=65,
@@ -456,13 +465,13 @@ def care_page(window, aquarium=None):
         border_width=1,
         border_color=CYAN
     )
-    bottom_frame.pack(
-        side="bottom",
-        fill="x",
-        padx=8,
-        pady=(0, 5)
+
+    navigation_frame.place(
+        x=8,
+        y=581
     )
-    bottom_frame.pack_propagate(False)
+
+    navigation_frame.pack_propagate(False)
 
     navigation_items = [
         ("home.png", "Головна"),
@@ -474,31 +483,27 @@ def care_page(window, aquarium=None):
 
     def navigate(page_name):
 
-        if page_name == "Аналіз":
+        if page_name == "Головна":
+            from home import home_page
+            home_page(window, aquarium)
 
+        elif page_name == "Аналіз":
             from analysis import analysis_page
+
             analysis_page(
                 window,
                 back_command=lambda: care_page(window, aquarium),
                 aquarium=aquarium
             )
 
-        elif page_name == "Головна":
-
-            from home import home_page
-            home_page(window, aquarium)
-
         elif page_name == "Догляд":
-
             care_page(window, aquarium)
 
         elif page_name == "Історія":
-
             from history import history_page
             history_page(window, aquarium)
 
         elif page_name == "Профіль":
-
             from profile import profile_page
             profile_page(window, aquarium)
 
@@ -512,21 +517,24 @@ def care_page(window, aquarium=None):
         icon_image = None
 
         if os.path.exists(icon_path):
+            try:
+                original = Image.open(
+                    icon_path
+                ).convert("RGBA")
 
-            icon_original = Image.open(
-                icon_path
-            ).convert("RGBA")
+                icon_image = ctk.CTkImage(
+                    light_image=original,
+                    dark_image=original,
+                    size=(30, 30)
+                )
 
-            icon_image = ctk.CTkImage(
-                light_image=icon_original,
-                dark_image=icon_original,
-                size=(30, 30)
-            )
+                navigation_images.append(icon_image)
 
-            navigation_images.append(icon_image)
+            except Exception:
+                pass
 
         nav_button = ctk.CTkButton(
-            bottom_frame,
+            navigation_frame,
             text="",
             image=icon_image,
             width=48,
@@ -547,5 +555,5 @@ def care_page(window, aquarium=None):
             y=5
         )
 
-    bottom_frame.navigation_images = navigation_images
-    bottom_frame.task_images = task_images
+    navigation_frame.navigation_images = navigation_images
+    navigation_frame.task_images = task_images
