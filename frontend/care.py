@@ -170,18 +170,18 @@ def care_page(window, aquarium=None):
                     border_color="#A8C4D0"
                 )
 
-    # Ширина кнопки — 39 px, расстояние между кнопками — 3 px.
-    # Общая ширина календаря — 291 px, он расположен по центру.
-
     button_width = 39
     button_gap = 3
-    total_width = len(week_days) * button_width + (
-            len(week_days) - 1
-    ) * button_gap
+
+    total_width = (
+        len(week_days) * button_width
+        + (len(week_days) - 1) * button_gap
+    )
 
     start_x = (300 - total_width) // 2
 
     for i, (day, number) in enumerate(week_days):
+
         button = ctk.CTkButton(
             calendar_frame,
             text=day + "\n" + number,
@@ -206,16 +206,15 @@ def care_page(window, aquarium=None):
 
     # ---------- ІКОНКИ ЗАВДАНЬ ----------
 
-    def load_icon(file_names, size=(35, 35)):
+    def load_icon(file_names, size=(32, 32)):
 
         for file_name in file_names:
             path = os.path.join(ICONS_DIR, file_name)
 
             if os.path.exists(path):
                 try:
-                    original = Image.open(
-                        path
-                    ).convert("RGBA")
+                    with Image.open(path) as source:
+                        original = source.convert("RGBA")
 
                     image = ctk.CTkImage(
                         light_image=original,
@@ -232,19 +231,23 @@ def care_page(window, aquarium=None):
         return None
 
     water_icon = load_icon(
-        ["water.png", "drop.png", "water_drop.png"]
+        ["water.png", "drop.png", "water_drop.png"],
+        (32, 32)
     )
 
     cleaning_icon = load_icon(
-        ["cleaning.png", "clean.png", "calendar.png"]
+        ["cleaning.png", "clean.png", "calendar.png"],
+        (32, 32)
     )
 
     filter_icon = load_icon(
-        ["filter.png", "calendar_clock.png", "calendar.png"]
+        ["filter.png", "calendar_clock.png", "calendar.png"],
+        (32, 32)
     )
 
     feeding_icon = load_icon(
-        ["fish.png", "feeding.png", "food.png"]
+        ["fish.png", "feeding.png", "food.png"],
+        (32, 32)
     )
 
     # ---------- ОБЛАСТЬ ЗАВДАНЬ ----------
@@ -282,54 +285,71 @@ def care_page(window, aquarium=None):
         completed=False
     ):
 
+        card_width = 292
+        card_height = 72
+
         card = ctk.CTkFrame(
             content,
-            width=268,
-            height=72,
+            width=card_width,
+            height=card_height,
             corner_radius=13,
             fg_color=CARD,
             border_width=1,
             border_color=CYAN
         )
-        card.place(x=8, y=y)
 
+        # Центрування картки
+        card.place(
+            x=(296 - card_width) // 2,
+            y=y
+        )
+
+        # Іконка завдання
         if icon:
             icon_label = ctk.CTkLabel(
                 card,
                 text="",
                 image=icon,
-                width=38,
-                height=38,
+                width=36,
+                height=36,
                 fg_color="transparent"
             )
         else:
             icon_label = ctk.CTkLabel(
                 card,
                 text=fallback,
-                width=38,
-                height=38,
-                font=("Arial", 25),
+                width=36,
+                height=36,
+                font=("Arial", 23),
                 text_color=CYAN,
                 fg_color="transparent"
             )
 
-        icon_label.place(x=10, y=16)
+        icon_label.place(
+            x=12,
+            y=(card_height - 36) // 2
+        )
 
+        # Назва завдання
         ctk.CTkLabel(
             card,
             text=title,
-            width=166,
-            height=23,
+            width=174,
+            height=24,
             font=("Arial", 14),
             text_color=WHITE,
             anchor="w"
-        ).place(x=49, y=13)
+        ).place(
+            x=57,
+            y=13
+        )
 
+        # Статус завдання
         status_label = ctk.CTkLabel(
             card,
             text="Виконано" if completed else "Не виконано",
-            width=166,
-            height=19,
+            width=174,
+            height=20,
             font=(
                 "Arial",
                 12,
@@ -338,24 +358,37 @@ def care_page(window, aquarium=None):
             text_color=GREEN if completed else WHITE,
             anchor="w"
         )
-        status_label.place(x=49, y=37)
+
+        status_label.place(
+            x=57,
+            y=38
+        )
 
         state = [completed]
 
+        # ---------- КРУГЛАЯ КНОПКА ВЫПОЛНЕНИЯ ----------
+
         check_button = ctk.CTkButton(
             card,
-            text="✓" if completed else "○",
-            width=23,
-            height=23,
+            text="✓" if completed else "",
+            width=24,
+            height=24,
             corner_radius=12,
-            font=("Arial", 15, "bold"),
-            text_color=WHITE if completed else GRAY,
+            border_spacing=0,
+            font=("Arial", 14, "bold"),
+            text_color="#FFFFFF",
             fg_color="#35B878" if completed else "transparent",
-            hover_color="#168653",
+            hover_color="#269B63" if completed else "#164052",
             border_width=0 if completed else 1,
             border_color=GRAY
         )
-        check_button.place(x=235, y=24)
+
+        check_button.place(
+            x=card_width - 36,
+            y=(card_height - 24) // 2
+        )
+
+        state = [completed]
 
         def toggle_task():
 
@@ -365,8 +398,10 @@ def care_page(window, aquarium=None):
                 check_button.configure(
                     text="✓",
                     fg_color="#35B878",
-                    text_color=WHITE,
-                    border_width=0
+                    text_color="#FFFFFF",
+                    hover_color="#269B63",
+                    border_width=0,
+                    corner_radius=12
                 )
 
                 status_label.configure(
@@ -377,10 +412,13 @@ def care_page(window, aquarium=None):
 
             else:
                 check_button.configure(
-                    text="○",
+                    text="",
                     fg_color="transparent",
                     text_color=GRAY,
-                    border_width=1
+                    hover_color="#164052",
+                    border_width=1,
+                    border_color=GRAY,
+                    corner_radius=12
                 )
 
                 status_label.configure(
@@ -400,7 +438,7 @@ def care_page(window, aquarium=None):
         "Підміна води",
         water_icon,
         "💧",
-        True
+        False
     )
 
     create_task_card(
@@ -408,7 +446,7 @@ def care_page(window, aquarium=None):
         "Очищення скла",
         cleaning_icon,
         "▣",
-        True
+        False
     )
 
     section_title("Завтра", 183)
@@ -435,14 +473,18 @@ def care_page(window, aquarium=None):
 
     upcoming_card = ctk.CTkFrame(
         content,
-        width=268,
+        width=292,
         height=36,
         corner_radius=12,
         fg_color="#002638",
         border_width=1,
         border_color="#07516A"
     )
-    upcoming_card.place(x=8, y=391)
+
+    upcoming_card.place(
+        x=(296 - 292) // 2,
+        y=391
+    )
 
     ctk.CTkLabel(
         upcoming_card,
@@ -455,6 +497,7 @@ def care_page(window, aquarium=None):
     ).place(x=10, y=2)
 
     # ---------- НИЖНЯ ПАНЕЛЬ НАВІГАЦІЇ ----------
+    # НЕ ИЗМЕНЯЛАСЬ
 
     navigation_frame = ctk.CTkFrame(
         main_frame,
