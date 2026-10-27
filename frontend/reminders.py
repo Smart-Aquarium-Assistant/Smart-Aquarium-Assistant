@@ -25,7 +25,7 @@ def reminders_page(window, aquarium=None):
     card_color = "#003047"
     cyan = "#00F8FB"
     white = "#FFFFFF"
-    gray = "#A8C4D0"
+    gray = "#A8B8C0"
 
     # Основний контейнер
     main_frame = ctk.CTkFrame(
@@ -38,6 +38,11 @@ def reminders_page(window, aquarium=None):
     )
     main_frame.place(x=0, y=0)
 
+    # Повернення на головну сторінку
+    def go_back():
+        from home import home_page
+        home_page(window, aquarium)
+
     # Стрілка назад
     back_button = ctk.CTkButton(
         main_frame,
@@ -46,297 +51,214 @@ def reminders_page(window, aquarium=None):
         height=35,
         corner_radius=8,
         fg_color="transparent",
-        hover_color="#003047",
+        hover_color=card_color,
         text_color=cyan,
         font=("Arial", 24, "bold"),
         border_width=0,
-        command=lambda: go_back()
+        command=go_back
     )
-    back_button.place(x=12, y=10)
-
-    # Повернення на головну сторінку
-    def go_back():
-        from home import home_page
-        home_page(window, aquarium)
+    back_button.place(x=12, y=8)
 
     # Заголовок
     title = ctk.CTkLabel(
         main_frame,
         text="Сповіщення",
+        font=("Arial", 19, "bold"),
+        text_color=white
+    )
+    title.place(relx=0.5, y=25, anchor="center")
+
+    # Підзаголовок
+    subtitle = ctk.CTkLabel(
+        main_frame,
+        text="Ваші сповіщення",
+        font=("Arial", 15, "bold"),
+        text_color=white,
+        anchor="w"
+    )
+    subtitle.place(x=18, y=73)
+
+    # Картка порожніх сповіщень
+    empty_card = ctk.CTkFrame(
+        main_frame,
+        width=284,
+        height=220,
+        fg_color=card_color,
+        corner_radius=16,
+        border_width=1,
+        border_color="#06465A"
+    )
+    empty_card.place(x=18, y=125)
+
+    # Іконка сповіщень
+    bell_path = os.path.join(
+        icons_folder,
+        "bell.png"
+    )
+
+    bell_image = None
+
+    if os.path.exists(bell_path):
+        try:
+            with Image.open(bell_path) as source:
+                bell_photo = source.convert("RGBA")
+
+            bell_image = ctk.CTkImage(
+                light_image=bell_photo,
+                dark_image=bell_photo,
+                size=(42, 42)
+            )
+        except Exception as error:
+            print(f"Помилка іконки дзвоника: {error}")
+
+    if bell_image:
+        icon_label = ctk.CTkLabel(
+            empty_card,
+            text="",
+            image=bell_image,
+            fg_color="transparent"
+        )
+        icon_label.place(
+            relx=0.5,
+            y=43,
+            anchor="center"
+        )
+        empty_card.bell_image = bell_image
+    else:
+        icon_label = ctk.CTkLabel(
+            empty_card,
+            text="♧",
+            font=("Arial", 42),
+            text_color=cyan,
+            fg_color="transparent"
+        )
+        icon_label.place(
+            relx=0.5,
+            y=43,
+            anchor="center"
+        )
+
+    # Заголовок порожнього стану
+    empty_title = ctk.CTkLabel(
+        empty_card,
+        text="Поки немає сповіщень",
         font=("Arial", 15, "bold"),
         text_color=white
     )
-    title.place(x=104, y=20)
+    empty_title.place(
+        relx=0.5,
+        y=99,
+        anchor="center"
+    )
 
-    # Дані сповіщень
-    notifications = [
-        {
-            "category": "Системні",
-            "icon": "water.png",
-            "title": "Аналіз акваріума завершено",
-            "message": "Все в нормі!",
-            "time": "09:20",
-            "color": "#42C984"
-        },
-        {
-            "category": "Важливі",
-            "icon": "care.png",
-            "title": "Пора годувати риб",
-            "message": "Годування в 18:00",
-            "time": "09:20",
-            "color": "#20C5C9"
-        },
-        {
-            "category": "Важливі",
-            "icon": "water.png",
-            "title": "Підміна води",
-            "message": "Через 5 днів",
-            "time": "09:20",
-            "color": "#42C984"
-        },
-        {
-            "category": "Системні",
-            "icon": None,
-            "title": "Новий вид риб",
-            "message": "Додано до каталогу",
-            "time": "09:20",
-            "color": "#00D8D8"
-        }
+    # Пояснення
+    empty_message = ctk.CTkLabel(
+        empty_card,
+        text=(
+            "Тут з'являтимуться повідомлення\n"
+            "про стан води, догляд та інші\n"
+            "важливі події у твоїх акваріумах."
+        ),
+        font=("Arial", 11),
+        text_color=gray,
+        justify="center"
+    )
+    empty_message.place(
+        relx=0.5,
+        y=153,
+        anchor="center"
+    )
+
+    # Кнопка повернення
+    back_to_aquariums = ctk.CTkButton(
+        main_frame,
+        text="На головну",
+        width=220,
+        height=40,
+        fg_color=card_color,
+        hover_color="#00506B",
+        border_width=1,
+        border_color=cyan,
+        corner_radius=12,
+        text_color=white,
+        font=("Arial", 12, "bold"),
+        command=go_back
+    )
+    back_to_aquariums.place(
+        relx=0.5,
+        y=390,
+        anchor="center"
+    )
+
+    # Нижня навігація
+    navigation_frame = ctk.CTkFrame(
+        main_frame,
+        width=304,
+        height=65,
+        corner_radius=20,
+        fg_color=card_color,
+        border_width=1,
+        border_color="#91B7C7"
+    )
+    navigation_frame.place(x=8, y=575)
+
+    navigation_items = [
+        ("home.png", "Головна"),
+        ("analysis.png", "Аналіз"),
+        ("care.png", "Догляд"),
+        ("history.png", "Історія"),
+        ("profile.png", "Профіль")
     ]
 
-    # Фільтри
-    selected_filter = ctk.StringVar(value="Всі")
+    navigation_images = []
 
-    filter_frame = ctk.CTkFrame(
-        main_frame,
-        width=270,
-        height=35,
-        fg_color="transparent",
-        corner_radius=0
-    )
-    filter_frame.place(x=28, y=68)
+    for i in range(len(navigation_items)):
 
-    filter_buttons = {}
+        icon_file, page_name = navigation_items[i]
 
-    def select_filter(value):
-        selected_filter.set(value)
-
-        for name, button in filter_buttons.items():
-            button.configure(
-                fg_color=(
-                    "#00445C"
-                    if name == value
-                    else background
-                )
-            )
-
-        show_notifications()
-
-    for i, name in enumerate(
-        ["Всі", "Важливі", "Системні"]
-    ):
-        button = ctk.CTkButton(
-            filter_frame,
-            text=name,
-            width=72,
-            height=33,
-            corner_radius=12,
-            fg_color=background,
-            hover_color="#00445C",
-            border_width=1,
-            border_color=cyan,
-            text_color=white,
-            font=("Arial", 10, "bold"),
-            command=lambda value=name: select_filter(value)
+        icon_path = os.path.join(
+            icons_folder,
+            icon_file
         )
-        button.place(x=i * 86, y=0)
-        filter_buttons[name] = button
 
-    # Область сповіщень
-    notifications_frame = ctk.CTkFrame(
-        main_frame,
-        width=300,
-        height=440,
-        fg_color="transparent",
-        corner_radius=0
-    )
-    notifications_frame.place(x=10, y=126)
+        icon_image = None
 
-    # Зберігаємо зображення, щоб вони не зникали
-    notification_images = []
-
-    def show_notifications():
-
-        for widget in notifications_frame.winfo_children():
-            widget.destroy()
-
-        notification_images.clear()
-
-        if selected_filter.get() == "Всі":
-            visible_notifications = notifications
-        else:
-            visible_notifications = [
-                item for item in notifications
-                if item["category"] == selected_filter.get()
-            ]
-
-        y = 10
-
-        for item in visible_notifications:
-
-            # Картка іконки
-            icon_box = ctk.CTkFrame(
-                notifications_frame,
-                width=58,
-                height=54,
-                corner_radius=8,
-                fg_color=item["color"],
-                border_width=0
-            )
-            icon_box.place(x=8, y=y + 6)
-
-            icon_file = item["icon"]
-            icon_path = (
-                os.path.join(icons_folder, icon_file)
-                if icon_file else ""
-            )
-
-            if icon_path and os.path.exists(icon_path):
-                photo = Image.open(icon_path).convert("RGBA")
-                icon_image = ctk.CTkImage(
-                    light_image=photo,
-                    dark_image=photo,
-                    size=(35, 35)
-                )
-                notification_images.append(icon_image)
-
-                icon_label = ctk.CTkLabel(
-                    icon_box,
-                    text="",
-                    image=icon_image,
-                    fg_color="transparent"
-                )
-                icon_label.place(
-                    relx=0.5,
-                    rely=0.5,
-                    anchor="center"
-                )
-            else:
-                icon_label = ctk.CTkLabel(
-                    icon_box,
-                    text="🐟",
-                    font=("Arial", 24),
-                    fg_color="transparent"
-                )
-                icon_label.place(
-                    relx=0.5,
-                    rely=0.5,
-                    anchor="center"
-                )
-
-            # Заголовок сповіщення
-            notification_title = ctk.CTkLabel(
-                notifications_frame,
-                text=item["title"],
-                font=("Arial", 11, "bold"),
-                text_color=white,
-                anchor="w",
-                justify="left",
-                wraplength=198
-            )
-            notification_title.place(x=76, y=y + 10)
-
-            # Текст сповіщення
-            message = ctk.CTkLabel(
-                notifications_frame,
-                text=item["message"],
-                font=("Arial", 12, "bold"),
-                text_color=cyan,
-                anchor="w"
-            )
-            message.place(x=76, y=y + 42)
-
-            # Час
-            time_label = ctk.CTkLabel(
-                notifications_frame,
-                text=item["time"],
-                font=("Arial", 11, "bold"),
-                text_color=white,
-                anchor="e"
-            )
-            time_label.place(x=242, y=y + 62)
-
-            # Роздільна лінія
-            divider = ctk.CTkFrame(
-                notifications_frame,
-                width=246,
-                height=4,
-                corner_radius=0,
-                fg_color="#003047"
-            )
-            divider.place(x=8, y=y + 80)
-
-            y += 110
-
-        main_frame.notification_images = notification_images
-
-        # Нижня навігація: тільки іконки
-        navigation_frame = ctk.CTkFrame(
-            main_frame,
-            width=304,
-            height=65,
-            corner_radius=20,
-            fg_color="#003047",
-            border_width=1,
-            border_color="#91B7C7"
-        )
-        navigation_frame.place(x=8, y=575)
-
-        navigation_items = [
-            ("home.png", "Головна"),
-            ("analysis.png", "Аналіз"),
-            ("care.png", "Догляд"),
-            ("history.png", "Історія"),
-            ("profile.png", "Профіль")
-        ]
-
-        navigation_images = []
-
-        for i in range(len(navigation_items)):
-            icon_file, page_name = navigation_items[i]
-            icon_path = os.path.join(icons_folder, icon_file)
-
-            icon_image = None
-
-            if os.path.exists(icon_path):
-                icon_photo = Image.open(icon_path).convert("RGBA")
+        if os.path.exists(icon_path):
+            try:
+                with Image.open(icon_path) as source:
+                    icon_photo = source.convert("RGBA")
 
                 icon_image = ctk.CTkImage(
                     light_image=icon_photo,
                     dark_image=icon_photo,
                     size=(30, 30)
                 )
+
                 navigation_images.append(icon_image)
 
-            nav_button = ctk.CTkButton(
-                navigation_frame,
-                text="",
-                image=icon_image,
-                width=48,
-                height=52,
-                corner_radius=12,
-                fg_color=(
-                    "#00435A" if i == 0 else "transparent"
-                ),
-                hover_color="#00506B",
-                border_width=0,
-                command=lambda name=page_name: print(name)
-            )
+            except Exception as error:
+                print(
+                    f"Помилка іконки {icon_file}: {error}"
+                )
 
-            nav_button.place(
-                x=4 + i * 59,
-                y=5
-            )
+        nav_button = ctk.CTkButton(
+            navigation_frame,
+            text="",
+            image=icon_image,
+            width=48,
+            height=52,
+            corner_radius=12,
+            fg_color=(
+                "#00435A" if i == 0 else "transparent"
+            ),
+            hover_color="#00506B",
+            border_width=0,
+            command=lambda name=page_name: print(name)
+        )
 
-    # Показати сповіщення
-    select_filter("Всі")
+        nav_button.place(
+            x=4 + i * 59,
+            y=5
+        )
+
+    navigation_frame.navigation_images = navigation_images
