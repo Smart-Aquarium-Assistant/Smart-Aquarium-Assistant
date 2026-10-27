@@ -445,7 +445,8 @@ def profile_page(window, aquarium=None):
     def open_menu(item):
 
         if item == "aquariums":
-            open_home()
+            from my_aquariums import my_aquariums_page
+            my_aquariums_page(window, aquarium)
 
         elif item == "favorites":
             messagebox.showinfo(
