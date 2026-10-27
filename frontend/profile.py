@@ -1,4 +1,3 @@
-
 import os
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
@@ -55,6 +54,10 @@ def profile_page(window, aquarium=None):
         from home import home_page
         home_page(window, aquarium)
 
+    def open_notifications():
+        from reminders import reminders_page
+        reminders_page(window, aquarium)
+
     back_button = ctk.CTkButton(
         main_frame,
         text="←",
@@ -80,44 +83,44 @@ def profile_page(window, aquarium=None):
     )
     title_label.place(relx=0.5, y=25, anchor="center")
 
-    # ---------- КАЛЕНДАР ----------
+    # ---------- КОЛОКОЛЬЧИК ОПОВІЩЕНЬ ----------
 
-    calendar_image = None
+    bell_image = None
 
-    calendar_icon_path = os.path.join(
-        icons_folder, "calendar.png"
+    bell_icon_path = os.path.join(
+        icons_folder, "bell.png"
     )
 
-    if os.path.exists(calendar_icon_path):
+    if os.path.exists(bell_icon_path):
         try:
-            calendar_original = Image.open(
-                calendar_icon_path
-            ).convert("RGBA")
+            with Image.open(bell_icon_path) as source:
+                bell_original = source.convert("RGBA")
 
-            calendar_image = ctk.CTkImage(
-                light_image=calendar_original,
-                dark_image=calendar_original,
+            bell_image = ctk.CTkImage(
+                light_image=bell_original,
+                dark_image=bell_original,
                 size=(23, 23)
             )
-        except Exception:
-            pass
+        except Exception as error:
+            print(f"Помилка іконки дзвоника: {error}")
 
-    calendar_button = ctk.CTkButton(
+    bell_button = ctk.CTkButton(
         main_frame,
-        text="" if calendar_image else "▦",
-        image=calendar_image,
+        text="" if bell_image else "♧",
+        image=bell_image,
         width=34,
         height=34,
         corner_radius=9,
         fg_color="transparent",
         hover_color=CARD_COLOR,
-        text_color="#D9F5FF",
+        text_color=CYAN,
         font=("Arial", 22),
         border_width=0,
-        command=lambda: print("Календар")
+        command=open_notifications
     )
-    calendar_button.place(x=274, y=8)
-    main_frame.calendar_image = calendar_image
+    bell_button.place(x=274, y=8)
+
+    main_frame.bell_image = bell_image
 
     # ---------- ПОШУК АВАТАРА ----------
 
@@ -621,7 +624,6 @@ def profile_page(window, aquarium=None):
 
         elif page_name == "Історія":
             from history import history_page
-
             history_page(window, aquarium)
 
         elif page_name == "Профіль":
@@ -676,4 +678,3 @@ def profile_page(window, aquarium=None):
         )
 
     navigation_frame.navigation_images = navigation_images
-
