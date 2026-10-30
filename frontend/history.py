@@ -1,4 +1,3 @@
-
 import os
 import tkinter as tk
 import customtkinter as ctk
@@ -16,7 +15,7 @@ GREEN = "#60D48C"
 YELLOW = "#FFB800"
 
 
-def history_page(window, aquarium=None):
+def history_page(window, aquarium=None, back_command=None):
 
     for widget in window.winfo_children():
         widget.destroy()
@@ -49,8 +48,13 @@ def history_page(window, aquarium=None):
     # ---------- ВЕРХНЯ ПАНЕЛЬ ----------
 
     def go_back():
-        from home import home_page
-        home_page(window, aquarium)
+
+        if back_command is not None:
+            back_command()
+
+        else:
+            from home import home_page
+            home_page(window, aquarium)
 
     back_button = ctk.CTkButton(
         main_frame,
@@ -232,9 +236,6 @@ def history_page(window, aquarium=None):
 
     # ---------- ГРАФІК ----------
 
-    # Canvas займає всю ширину вікна та центрується
-    # відносно батьківського фрейму.
-
     graph = tk.Canvas(
         main_frame,
         width=320,
@@ -249,7 +250,6 @@ def history_page(window, aquarium=None):
         anchor="n"
     )
 
-    # Область графіка між шкалою pH і температури
     graph_left = 40
     graph_right = 280
     graph_top = 5
@@ -360,9 +360,6 @@ def history_page(window, aquarium=None):
         )
 
     # ---------- ДАНІ ВИМІРЮВАНЬ ----------
-
-    # Графік залишається порожнім, доки немає реальних
-    # показників pH і температури.
 
     ph_data = []
     temperature_data = []
@@ -521,7 +518,6 @@ def history_page(window, aquarium=None):
         )
         arrow_button.place(x=250, y=12)
 
-
     # ---------- НИЖНЯЯ ПАНЕЛЬ НАВІГАЦІЇ ----------
 
     bottom_frame = ctk.CTkFrame(
@@ -550,6 +546,7 @@ def history_page(window, aquarium=None):
 
         if page_name == "Аналіз":
             from analysis import analysis_page
+
             analysis_page(
                 window,
                 back_command=go_back,

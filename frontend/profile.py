@@ -1,4 +1,3 @@
-
 import os
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
@@ -55,6 +54,10 @@ def profile_page(window, aquarium=None):
         from home import home_page
         home_page(window, aquarium)
 
+    def open_notifications():
+        from reminders import reminders_page
+        reminders_page(window, aquarium)
+
     back_button = ctk.CTkButton(
         main_frame,
         text="←",
@@ -80,44 +83,44 @@ def profile_page(window, aquarium=None):
     )
     title_label.place(relx=0.5, y=25, anchor="center")
 
-    # ---------- КАЛЕНДАР ----------
+    # ---------- КОЛОКОЛЬЧИК ОПОВІЩЕНЬ ----------
 
-    calendar_image = None
+    bell_image = None
 
-    calendar_icon_path = os.path.join(
-        icons_folder, "calendar.png"
+    bell_icon_path = os.path.join(
+        icons_folder, "bell.png"
     )
 
-    if os.path.exists(calendar_icon_path):
+    if os.path.exists(bell_icon_path):
         try:
-            calendar_original = Image.open(
-                calendar_icon_path
-            ).convert("RGBA")
+            with Image.open(bell_icon_path) as source:
+                bell_original = source.convert("RGBA")
 
-            calendar_image = ctk.CTkImage(
-                light_image=calendar_original,
-                dark_image=calendar_original,
+            bell_image = ctk.CTkImage(
+                light_image=bell_original,
+                dark_image=bell_original,
                 size=(23, 23)
             )
-        except Exception:
-            pass
+        except Exception as error:
+            print(f"Помилка іконки дзвоника: {error}")
 
-    calendar_button = ctk.CTkButton(
+    bell_button = ctk.CTkButton(
         main_frame,
-        text="" if calendar_image else "▦",
-        image=calendar_image,
+        text="" if bell_image else "♧",
+        image=bell_image,
         width=34,
         height=34,
         corner_radius=9,
         fg_color="transparent",
         hover_color=CARD_COLOR,
-        text_color="#D9F5FF",
+        text_color=CYAN,
         font=("Arial", 22),
         border_width=0,
-        command=lambda: print("Календар")
+        command=open_notifications
     )
-    calendar_button.place(x=274, y=8)
-    main_frame.calendar_image = calendar_image
+    bell_button.place(x=274, y=8)
+
+    main_frame.bell_image = bell_image
 
     # ---------- ПОШУК АВАТАРА ----------
 
@@ -380,7 +383,6 @@ def profile_page(window, aquarium=None):
         ("5", "Завдань")
     ]
 
-    # Вертикальні розділювачі на всю висоту картки
     for x in (98, 197):
         separator = ctk.CTkFrame(
             stats_frame,
@@ -390,12 +392,8 @@ def profile_page(window, aquarium=None):
             fg_color="#FFFFFF",
             border_width=0
         )
-        separator.place(
-            x=x,
-            y=0
-        )
+        separator.place(x=x, y=0)
 
-    # Числа та підписи
     for i, (number, caption) in enumerate(stats):
 
         center_x = [49, 148, 246][i]
@@ -467,17 +465,23 @@ def profile_page(window, aquarium=None):
             )
 
         elif item == "history":
-            from fish import fish_page
-            fish_page(window, aquarium)
+            from history import history_page
 
-    # Збільшені відстані між картками
+            history_page(
+                window,
+                aquarium,
+                back_command=lambda: profile_page(
+                    window,
+                    aquarium
+                )
+            )
+
     menu_y_positions = [273, 350, 427, 504]
 
     for index, (icon_file, caption, action) in enumerate(menu_items):
 
         y = menu_y_positions[index]
 
-        # Картка меню
         menu_button = ctk.CTkButton(
             main_frame,
             text="",
@@ -492,7 +496,6 @@ def profile_page(window, aquarium=None):
         )
         menu_button.place(x=12, y=y)
 
-        # Іконка PNG
         icon_path = os.path.join(
             icons_folder, icon_file
         )
@@ -533,7 +536,6 @@ def profile_page(window, aquarium=None):
                     f"{icon_file}: {error}"
                 )
 
-        # Текст меню
         text_label = ctk.CTkLabel(
             menu_button,
             text=caption,
@@ -552,7 +554,6 @@ def profile_page(window, aquarium=None):
             anchor="w"
         )
 
-        # Стрілка
         arrow_label = ctk.CTkLabel(
             menu_button,
             text="➜",
@@ -584,11 +585,7 @@ def profile_page(window, aquarium=None):
         border_color=CYAN
     )
 
-    navigation_frame.place(
-        x=8,
-        y=581
-    )
-
+    navigation_frame.place(x=8, y=581)
     navigation_frame.pack_propagate(False)
 
     navigation_items = [
@@ -621,7 +618,6 @@ def profile_page(window, aquarium=None):
 
         elif page_name == "Історія":
             from history import history_page
-
             history_page(window, aquarium)
 
         elif page_name == "Профіль":
@@ -676,4 +672,3 @@ def profile_page(window, aquarium=None):
         )
 
     navigation_frame.navigation_images = navigation_images
-
