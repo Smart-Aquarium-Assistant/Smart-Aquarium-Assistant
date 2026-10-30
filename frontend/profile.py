@@ -383,7 +383,6 @@ def profile_page(window, aquarium=None):
         ("5", "Завдань")
     ]
 
-    # Вертикальні розділювачі на всю висоту картки
     for x in (98, 197):
         separator = ctk.CTkFrame(
             stats_frame,
@@ -393,12 +392,8 @@ def profile_page(window, aquarium=None):
             fg_color="#FFFFFF",
             border_width=0
         )
-        separator.place(
-            x=x,
-            y=0
-        )
+        separator.place(x=x, y=0)
 
-    # Числа та підписи
     for i, (number, caption) in enumerate(stats):
 
         center_x = [49, 148, 246][i]
@@ -470,17 +465,23 @@ def profile_page(window, aquarium=None):
             )
 
         elif item == "history":
-            from fish import fish_page
-            fish_page(window, aquarium)
+            from history import history_page
 
-    # Збільшені відстані між картками
+            history_page(
+                window,
+                aquarium,
+                back_command=lambda: profile_page(
+                    window,
+                    aquarium
+                )
+            )
+
     menu_y_positions = [273, 350, 427, 504]
 
     for index, (icon_file, caption, action) in enumerate(menu_items):
 
         y = menu_y_positions[index]
 
-        # Картка меню
         menu_button = ctk.CTkButton(
             main_frame,
             text="",
@@ -495,7 +496,6 @@ def profile_page(window, aquarium=None):
         )
         menu_button.place(x=12, y=y)
 
-        # Іконка PNG
         icon_path = os.path.join(
             icons_folder, icon_file
         )
@@ -536,7 +536,6 @@ def profile_page(window, aquarium=None):
                     f"{icon_file}: {error}"
                 )
 
-        # Текст меню
         text_label = ctk.CTkLabel(
             menu_button,
             text=caption,
@@ -555,7 +554,6 @@ def profile_page(window, aquarium=None):
             anchor="w"
         )
 
-        # Стрілка
         arrow_label = ctk.CTkLabel(
             menu_button,
             text="➜",
@@ -587,11 +585,7 @@ def profile_page(window, aquarium=None):
         border_color=CYAN
     )
 
-    navigation_frame.place(
-        x=8,
-        y=581
-    )
-
+    navigation_frame.place(x=8, y=581)
     navigation_frame.pack_propagate(False)
 
     navigation_items = [
