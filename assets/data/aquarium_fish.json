@@ -1,0 +1,11 @@
+{
+    "default": [
+        {
+            "name": "Скалярія",
+            "latin": "Pterophyllum scalare",
+            "type": "Прісновод",
+            "image": "C:\\Users\\KITI\\Documents\\GitHub\\Smart-Aquarium-Assistant\\assets\\images\\fish\\fish_03.jpg",
+            "count": 1
+        }
+    ]
+}
