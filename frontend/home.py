@@ -1,3 +1,4 @@
+
 import customtkinter as ctk
 import os
 from PIL import Image
@@ -254,7 +255,11 @@ def home_page(window, aquarium=None):
         state_label.place(x=48, y=34)
 
     # Форма додавання акваріума
-    def open_add_aquarium():
+    def open_add_aquarium(
+        name_value=None,
+        type_value=None,
+        volume_value=None
+    ):
 
         for widget in window.winfo_children():
             widget.destroy()
@@ -368,7 +373,9 @@ def home_page(window, aquarium=None):
         )
         name_entry.place(x=10, y=240)
 
-        if aquarium is not None:
+        if name_value is not None:
+            name_entry.insert(0, name_value)
+        elif aquarium is not None:
             name_entry.insert(0, aquarium["name"])
         else:
             name_entry.insert(0, "Мій Травник")
@@ -386,8 +393,8 @@ def home_page(window, aquarium=None):
 
         selected_type = ctk.StringVar(
             value=(
-                aquarium["type"]
-                if aquarium is not None
+                type_value if type_value is not None
+                else aquarium["type"] if aquarium is not None
                 else "Прісноводний"
             )
         )
@@ -473,7 +480,9 @@ def home_page(window, aquarium=None):
         )
         volume_entry.place(x=10, y=423)
 
-        if aquarium is not None:
+        if volume_value is not None:
+            volume_entry.insert(0, volume_value)
+        elif aquarium is not None:
             volume_entry.insert(0, str(aquarium["volume"]))
 
         # Мешканці
@@ -487,29 +496,41 @@ def home_page(window, aquarium=None):
         )
         residents_label.place(x=18, y=469)
 
-        for x in [18, 93, 168, 243]:
-            resident_box = ctk.CTkFrame(
-                form_frame,
-                width=45,
-                height=45,
-                corner_radius=0,
-                fg_color="#34434A",
-                border_width=0
-            )
-            resident_box.place(x=x, y=497)
+        # Перехід до сторінки рибок
+        def open_fish():
 
-            resident_icon = ctk.CTkLabel(
-                resident_box,
-                text="📷",
-                font=("Arial", 21),
-                text_color="#A8B8C0",
-                fg_color="transparent"
+            # Зберігаємо дані до видалення форми
+            saved_name = name_entry.get()
+            saved_type = selected_type.get()
+            saved_volume = volume_entry.get()
+
+            from fish import fish_page
+
+            fish_page(
+                window,
+                aquarium,
+                back_command=lambda: open_add_aquarium(
+                    saved_name,
+                    saved_type,
+                    saved_volume
+                )
             )
-            resident_icon.place(
-                relx=0.5,
-                rely=0.5,
-                anchor="center"
-            )
+
+        add_fish_button = ctk.CTkButton(
+            form_frame,
+            text="+ Додати рибку",
+            width=284,
+            height=45,
+            corner_radius=12,
+            fg_color="#003047",
+            hover_color="#00445C",
+            border_width=1,
+            border_color=cyan_color,
+            text_color=cyan_color,
+            font=("Arial", 13, "bold"),
+            command=open_fish
+        )
+        add_fish_button.place(x=18, y=497)
 
         message = ctk.CTkLabel(
             form_frame,
@@ -522,6 +543,7 @@ def home_page(window, aquarium=None):
 
         # Збереження акваріума
         def save_aquarium():
+
             new_name = name_entry.get().strip()
             volume = volume_entry.get().strip()
 
@@ -574,7 +596,6 @@ def home_page(window, aquarium=None):
     )
     add_button.place(x=10, y=493)
 
-
     # Нижня навігація
     navigation_frame = ctk.CTkFrame(
         main_frame,
@@ -598,6 +619,7 @@ def home_page(window, aquarium=None):
     navigation_images = []
 
     def navigate(page_name):
+
         if page_name == "Аналіз":
             from analysis import analysis_page
             analysis_page(
@@ -622,6 +644,7 @@ def home_page(window, aquarium=None):
             profile_page(window, aquarium)
 
     for i, (icon_file, page_name) in enumerate(navigation_items):
+
         icon_path = os.path.join(icons_folder, icon_file)
 
         icon_image = None
@@ -657,8 +680,6 @@ def home_page(window, aquarium=None):
             y=5
         )
 
-    # Сохраняем ссылки на изображения
+    # Зберігаємо посилання на зображення
     main_frame.parameter_images = parameter_images
     main_frame.navigation_images = navigation_images
-
-
