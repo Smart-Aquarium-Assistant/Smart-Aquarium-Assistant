@@ -11,6 +11,8 @@ import random
 from PIL import Image, ImageOps
 from io import BytesIO
 
+from fish_details import fish_details_page
+
 
 # Фотографії перевіряються лише один раз за запуск програми.
 FISH_IMAGE_CHECK_STARTED = False
@@ -964,6 +966,21 @@ def fish_page(window, aquarium=None, back_command=None):
                 y=92
             )
 
+            # Уся картка та її вміст відкривають детальну сторінку рибки.
+            open_details = lambda event=None, selected_fish=fish: fish_details_page(
+                window,
+                selected_fish,
+                aquarium,
+                back_command=lambda: fish_page(window, aquarium, back_command),
+                project_folder=project_folder,
+                icons_folder=icons_folder
+            )
+
+            card.bind("<Button-1>", open_details)
+            image_label.bind("<Button-1>", open_details)
+            name_label.bind("<Button-1>", open_details)
+            latin_label.bind("<Button-1>", open_details)
+
     # Обновление поиска
 
     search_entry.bind(
@@ -1102,3 +1119,6 @@ def fish_page(window, aquarium=None, back_command=None):
         )
 
         download_thread.start()
+
+
+__all__ = ["fish_page"]
