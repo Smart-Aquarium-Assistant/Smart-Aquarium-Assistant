@@ -1,3 +1,4 @@
+
 import os
 import tkinter as tk
 import customtkinter as ctk
@@ -83,45 +84,50 @@ def history_page(window, aquarium=None, back_command=None):
     )
     title_label.place(relx=0.52, y=26, anchor="center")
 
-    # ---------- КАЛЕНДАР ----------
+    # ---------- КОЛОКОЛЬЧИК УВЕДОМЛЕНЬ ----------
 
-    calendar_image = None
+    bell_image = None
 
-    calendar_path = os.path.join(
-        icons_folder, "kalend.png"
+    bell_path = os.path.join(
+        icons_folder, "bell.png"
     )
 
-    if os.path.exists(calendar_path):
+    if os.path.exists(bell_path):
         try:
-            calendar_original = Image.open(
-                calendar_path
+            bell_original = Image.open(
+                bell_path
             ).convert("RGBA")
 
-            calendar_image = ctk.CTkImage(
-                light_image=calendar_original,
-                dark_image=calendar_original,
+            bell_image = ctk.CTkImage(
+                light_image=bell_original,
+                dark_image=bell_original,
                 size=(23, 23)
             )
+
         except Exception:
             pass
 
-    calendar_button = ctk.CTkButton(
+    def open_reminders():
+        from reminders import reminders_page
+        reminders_page(window, aquarium)
+
+    bell_button = ctk.CTkButton(
         main_frame,
-        text="" if calendar_image else "▦",
-        image=calendar_image,
+        text="" if bell_image else "♟",
+        image=bell_image,
         width=30,
         height=32,
         corner_radius=8,
         fg_color="transparent",
         hover_color=CARD_COLOR,
-        text_color=WHITE,
+        text_color=CYAN,
         font=("Arial", 22),
         border_width=0,
-        command=lambda: print("Відкрити календар")
+        command=open_reminders
     )
-    calendar_button.place(x=278, y=10)
+    bell_button.place(x=278, y=10)
 
-    main_frame.calendar_image = calendar_image
+    main_frame.bell_image = bell_image
 
     # ---------- ПЕРІОД ВИМІРЮВАНЬ ----------
 
@@ -380,51 +386,36 @@ def history_page(window, aquarium=None, back_command=None):
 
     def draw_measurement_icon(parent, x, y):
 
-        icon_canvas = tk.Canvas(
+        water_path = os.path.join(
+            icons_folder,
+            "water.png"
+        )
+
+        water_original = Image.open(
+            water_path
+        ).convert("RGBA")
+
+        water_image = ctk.CTkImage(
+            light_image=water_original,
+            dark_image=water_original,
+            size=(36, 36)
+        )
+
+        water_label = ctk.CTkLabel(
             parent,
-            width=42,
-            height=42,
-            bg=CARD_COLOR,
-            highlightthickness=0,
-            bd=0
-        )
-        icon_canvas.place(x=x, y=y)
-
-        icon_canvas.create_polygon(
-            20, 2,
-            7, 23,
-            7, 29,
-            11, 36,
-            18, 40,
-            25, 38,
-            31, 32,
-            32, 26,
-            28, 20,
-            fill="#00BFEA",
-            outline=CYAN,
-            width=2
+            text="",
+            image=water_image,
+            fg_color="transparent"
         )
 
-        icon_canvas.create_oval(
-            12, 22, 27, 36,
-            fill="#00A9D5",
-            outline="#00D9F5",
-            width=1
+        water_label.place(
+            x=x + 3,
+            y=y + 3
         )
 
-        icon_canvas.create_oval(
-            24, 21, 37, 34,
-            outline=CYAN,
-            width=3
-        )
+        water_label.image = water_image
 
-        icon_canvas.create_line(
-            34, 32, 40, 39,
-            fill=CYAN,
-            width=3
-        )
-
-        return icon_canvas
+        return water_label
 
     measurements = [
         ("12 вересня 2026", "pH 7.1", "26.3°C"),
@@ -494,14 +485,14 @@ def history_page(window, aquarium=None, back_command=None):
         temperature_label = ctk.CTkLabel(
             measurement_card,
             text=temperature_text,
-            width=74,
+            width=70,
             height=19,
             font=("Arial", 12, "bold"),
             text_color=WHITE,
             fg_color="transparent",
             anchor="e"
         )
-        temperature_label.place(x=174, y=29)
+        temperature_label.place(x=155, y=29)
 
         arrow_button = ctk.CTkButton(
             measurement_card,
@@ -516,7 +507,7 @@ def history_page(window, aquarium=None, back_command=None):
             border_width=0,
             command=lambda m=measurement: show_measurement(m)
         )
-        arrow_button.place(x=250, y=12)
+        arrow_button.place(x=232, y=12)
 
     # ---------- НИЖНЯЯ ПАНЕЛЬ НАВІГАЦІЇ ----------
 
