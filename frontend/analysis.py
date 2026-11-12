@@ -219,53 +219,44 @@ def analysis_page(window, back_command=None, aquarium=None):
 
     # ---------- AI-АССИСТЕНТ ----------
 
+    def open_ai_capabilities():
+        from ai_capabilities import ai_capabilities_page
+        ai_capabilities_page(window, aquarium)
+
     assistant_frame = ctk.CTkFrame(
         main_frame,
         fg_color=CARD_COLOR,
         border_color=CYAN,
         border_width=1,
         corner_radius=15,
-        height=60
+        height=60,
+        cursor="hand2"
     )
     assistant_frame.pack(fill="x", padx=17, pady=(0, 17))
     assistant_frame.pack_propagate(False)
 
-    # PNG-иконка AI
-    ai_icon_path = os.path.join(ICONS_DIR, "ai.png")
-
-    if os.path.exists(ai_icon_path):
-        ai_original = Image.open(ai_icon_path).convert("RGBA")
-
-        ai_image = ctk.CTkImage(
-            light_image=ai_original,
-            dark_image=ai_original,
-            size=(38, 38)
-        )
-
-        robot_label = ctk.CTkLabel(
-            assistant_frame,
-            text="",
-            image=ai_image,
-            fg_color="transparent",
-            width=38,
-            height=38
-        )
-        robot_label.pack(side="left", padx=(10, 9))
-
-        assistant_frame.ai_image = ai_image
-
     assistant_text = ctk.CTkLabel(
         assistant_frame,
-        text="AI аналізує ваш акваріум...",
-        font=("Arial", 14),
+        text="АІ Можливості",
+        font=("Arial", 14, "bold"),
         text_color=WHITE,
-        anchor="w"
+        anchor="center",
+        cursor="hand2"
     )
-    assistant_text.pack(
-        side="left",
-        fill="x",
-        expand=True,
-        padx=(0, 5)
+    assistant_text.place(
+        relx=0.5,
+        rely=0.5,
+        anchor="center"
+    )
+
+    assistant_frame.bind(
+        "<Button-1>",
+        lambda event: open_ai_capabilities()
+    )
+
+    assistant_text.bind(
+        "<Button-1>",
+        lambda event: open_ai_capabilities()
     )
 
     # ---------- ИНФОРМАЦИОННЫЕ КАРТОЧКИ ----------
