@@ -382,7 +382,6 @@ def history_page(window, aquarium=None, back_command=None):
     )
     latest_title.place(x=18, y=324)
 
-
     # ---------- ІКОНКА ВИМІРЮВАННЯ ----------
 
     def draw_measurement_icon(parent, x, y):
@@ -417,7 +416,6 @@ def history_page(window, aquarium=None, back_command=None):
         water_label.image = water_image
 
         return water_label
-
 
     measurements = [
         ("12 вересня 2026", "pH 7.1", "26.3°C"),
@@ -487,14 +485,14 @@ def history_page(window, aquarium=None, back_command=None):
         temperature_label = ctk.CTkLabel(
             measurement_card,
             text=temperature_text,
-            width=74,
+            width=70,
             height=19,
             font=("Arial", 12, "bold"),
             text_color=WHITE,
             fg_color="transparent",
             anchor="e"
         )
-        temperature_label.place(x=174, y=29)
+        temperature_label.place(x=155, y=29)
 
         arrow_button = ctk.CTkButton(
             measurement_card,
@@ -509,7 +507,7 @@ def history_page(window, aquarium=None, back_command=None):
             border_width=0,
             command=lambda m=measurement: show_measurement(m)
         )
-        arrow_button.place(x=250, y=12)
+        arrow_button.place(x=232, y=12)
 
     # ---------- НИЖНЯЯ ПАНЕЛЬ НАВІГАЦІЇ ----------
 
