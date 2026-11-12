@@ -1,7 +1,9 @@
+
 import os
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 from PIL import Image
+
 
 # Путь к папке проекта
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,6 +17,7 @@ GRAY = "#A8B8C0"
 
 
 def analysis_page(window, back_command=None, aquarium=None):
+
     # Очищаем предыдущую страницу
     for widget in window.winfo_children():
         widget.destroy()
@@ -64,7 +67,11 @@ def analysis_page(window, back_command=None, aquarium=None):
         font=("Arial", 17, "bold"),
         text_color=WHITE
     )
-    title_label.place(relx=0.52, rely=0.5, anchor="center")
+    title_label.place(
+        relx=0.52,
+        rely=0.5,
+        anchor="center"
+    )
 
     # ---------- ИКОНКА УВЕДОМЛЕНИЙ ----------
 
@@ -75,6 +82,7 @@ def analysis_page(window, back_command=None, aquarium=None):
         reminders_page(window, aquarium)
 
     if os.path.exists(bell_path):
+
         bell_original = Image.open(bell_path).convert("RGBA")
 
         bell_image = ctk.CTkImage(
@@ -98,6 +106,7 @@ def analysis_page(window, back_command=None, aquarium=None):
         header.bell_image = bell_image
 
     else:
+
         bell_button = ctk.CTkButton(
             header,
             text="♟",
@@ -121,7 +130,11 @@ def analysis_page(window, back_command=None, aquarium=None):
         corner_radius=16,
         height=180
     )
-    upload_frame.pack(fill="x", padx=17, pady=(0, 14))
+    upload_frame.pack(
+        fill="x",
+        padx=17,
+        pady=(0, 14)
+    )
     upload_frame.pack_propagate(False)
 
     upload_title = ctk.CTkLabel(
@@ -139,9 +152,17 @@ def analysis_page(window, back_command=None, aquarium=None):
         text_color=GRAY,
         cursor="hand2"
     )
-    photo_label.pack(fill="both", expand=True, padx=10, pady=(0, 8))
+    photo_label.pack(
+        fill="both",
+        expand=True,
+        padx=10,
+        pady=(0, 8)
+    )
+
+    # ---------- ВЫБОР ФОТОГРАФИИ ----------
 
     def choose_photo(event=None):
+
         path = filedialog.askopenfilename(
             title="Виберіть фото акваріума",
             filetypes=[
@@ -154,7 +175,9 @@ def analysis_page(window, back_command=None, aquarium=None):
             return
 
         try:
+
             original = Image.open(path).convert("RGB")
+
             original.thumbnail((270, 120))
 
             image = ctk.CTkImage(
@@ -176,6 +199,7 @@ def analysis_page(window, back_command=None, aquarium=None):
             )
 
         except Exception as error:
+
             messagebox.showerror(
                 "Помилка",
                 f"Не вдалося відкрити фото:\n{error}"
@@ -188,20 +212,30 @@ def analysis_page(window, back_command=None, aquarium=None):
     # ---------- КНОПКА АНАЛИЗА ----------
 
     def analyze_photo():
+
         if not selected_image["path"]:
             messagebox.showwarning(
                 "Аналіз акваріума",
                 "Спочатку завантажте фото акваріума."
             )
+
             return
 
-        # Пока AI не подключён, показываем сообщение.
-        # Позже здесь можно вызвать функцию AI-ассистента.
-        messagebox.showinfo(
-            "Аналіз акваріума",
-            "Фото готове до аналізу!\n\n"
-            "Для отримання реальних результатів "
-            "потрібно підключити AI-модель."
+        from ai_chat import ai_chat_page
+
+        ai_chat_page(
+            window,
+            aquarium=aquarium,
+            image_path=selected_image["path"]
+        )
+
+        # Открываем AI-чат и передаём фотографию
+        from ai_chat import ai_chat_page
+
+        ai_chat_page(
+            window,
+            aquarium=aquarium,
+            image_path=selected_image["path"]
         )
 
     analyze_button = ctk.CTkButton(
@@ -215,13 +249,23 @@ def analysis_page(window, back_command=None, aquarium=None):
         font=("Arial", 17, "bold"),
         command=analyze_photo
     )
-    analyze_button.pack(fill="x", padx=18, pady=(0, 16))
+
+    analyze_button.pack(
+        fill="x",
+        padx=18,
+        pady=(0, 16)
+    )
 
     # ---------- AI-АССИСТЕНТ ----------
 
     def open_ai_capabilities():
+
         from ai_capabilities import ai_capabilities_page
-        ai_capabilities_page(window, aquarium)
+
+        ai_capabilities_page(
+            window,
+            aquarium
+        )
 
     assistant_frame = ctk.CTkFrame(
         main_frame,
@@ -232,7 +276,13 @@ def analysis_page(window, back_command=None, aquarium=None):
         height=60,
         cursor="hand2"
     )
-    assistant_frame.pack(fill="x", padx=17, pady=(0, 17))
+
+    assistant_frame.pack(
+        fill="x",
+        padx=17,
+        pady=(0, 17)
+    )
+
     assistant_frame.pack_propagate(False)
 
     assistant_text = ctk.CTkLabel(
@@ -243,6 +293,7 @@ def analysis_page(window, back_command=None, aquarium=None):
         anchor="center",
         cursor="hand2"
     )
+
     assistant_text.place(
         relx=0.5,
         rely=0.5,
@@ -266,10 +317,25 @@ def analysis_page(window, back_command=None, aquarium=None):
         fg_color=BG_COLOR,
         corner_radius=0
     )
-    cards_frame.pack(fill="both", expand=True, padx=15, pady=(0, 8))
 
-    cards_frame.grid_columnconfigure((0, 1), weight=1, uniform="cards")
-    cards_frame.grid_rowconfigure((0, 1), weight=1, uniform="cards")
+    cards_frame.pack(
+        fill="both",
+        expand=True,
+        padx=15,
+        pady=(0, 8)
+    )
+
+    cards_frame.grid_columnconfigure(
+        (0, 1),
+        weight=1,
+        uniform="cards"
+    )
+
+    cards_frame.grid_rowconfigure(
+        (0, 1),
+        weight=1,
+        uniform="cards"
+    )
 
     # Названия PNG-файлов для карточек
     cards = [
@@ -282,6 +348,7 @@ def analysis_page(window, back_command=None, aquarium=None):
     card_images = []
 
     for index, (icon_file, heading, subtitle) in enumerate(cards):
+
         row = index // 2
         column = index % 2
 
@@ -292,6 +359,7 @@ def analysis_page(window, back_command=None, aquarium=None):
             border_width=1,
             corner_radius=15
         )
+
         card.grid(
             row=row,
             column=column,
@@ -304,6 +372,7 @@ def analysis_page(window, back_command=None, aquarium=None):
         icon_path = os.path.join(ICONS_DIR, icon_file)
 
         if os.path.exists(icon_path):
+
             icon_original = Image.open(icon_path).convert("RGBA")
 
             icon_image = ctk.CTkImage(
@@ -322,6 +391,7 @@ def analysis_page(window, back_command=None, aquarium=None):
                 width=35,
                 height=35
             )
+
             icon_label.pack(
                 side="left",
                 padx=(9, 7),
@@ -334,6 +404,7 @@ def analysis_page(window, back_command=None, aquarium=None):
             fg_color="transparent",
             corner_radius=0
         )
+
         text_frame.pack(
             side="left",
             fill="both",
@@ -351,6 +422,7 @@ def analysis_page(window, back_command=None, aquarium=None):
             anchor="w",
             wraplength=85
         )
+
         text_label.pack(
             fill="both",
             expand=True
@@ -370,12 +442,14 @@ def analysis_page(window, back_command=None, aquarium=None):
         border_width=1,
         border_color=CYAN
     )
+
     bottom_frame.pack(
         side="bottom",
         fill="x",
         padx=8,
         pady=(0, 5)
     )
+
     bottom_frame.pack_propagate(False)
 
     navigation_items = [
@@ -388,35 +462,45 @@ def analysis_page(window, back_command=None, aquarium=None):
 
     navigation_images = []
 
+    # ---------- ПЕРЕХОДЫ МЕЖДУ СТРАНИЦАМИ ----------
+
     def navigate(page_name):
+
         if page_name == "Аналіз":
             return
 
         elif page_name == "Головна":
+
             if back_command:
                 back_command()
+
             else:
                 from home import home_page
                 home_page(window, aquarium)
 
         elif page_name == "Догляд":
+
             from care import care_page
             care_page(window, aquarium)
 
         elif page_name == "Історія":
+
             from history import history_page
             history_page(window, aquarium)
 
         elif page_name == "Профіль":
+
             from profile import profile_page
             profile_page(window, aquarium)
 
     for i, (icon_file, page_name) in enumerate(navigation_items):
+
         icon_path = os.path.join(ICONS_DIR, icon_file)
 
         icon_image = None
 
         if os.path.exists(icon_path):
+
             icon_original = Image.open(icon_path).convert("RGBA")
 
             icon_image = ctk.CTkImage(

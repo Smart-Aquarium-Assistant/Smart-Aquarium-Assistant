@@ -216,7 +216,6 @@ def ai_capabilities_page(window, aquarium=None):
             pady=(15, 8)
         )
 
-
         # Название карточки
         heading_label = ctk.CTkLabel(
             card,
